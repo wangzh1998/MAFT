@@ -71,12 +71,17 @@ def local_generation(num_attribs, l_num, g_id, protected_attribs, constraint, mo
             x2 = generation_utilities.find_pair(x1, similar_x1, model)
             grad1 = compute_grad(x1, model)
             grad2 = compute_grad(x2, model)
+            # calculate every NOT-P attribute normalized salience probability（the probability of P attribute is 0）
             p = generation_utilities.normalization(grad1, grad2, protected_attribs, epsilon)
+            # randomly pick an NOT-P attribute from a probability distribution
             a = generation_utilities.random_pick(p)
+            # randomly pick a pertubation direction, the result is -1 or 1
             s = generation_utilities.random_pick([0.5, 0.5])
+            # pertube the selected NOT-P attibute or not
             x1[a] = x1[a] + direction[s] * s_l
             x1 = generation_utilities.clip(x1, constraint)
             all_gen_l = np.append(all_gen_l, [x1], axis=0)
+            # get new simliar_set by new x1(new seed)
             similar_x1 = generation_utilities.similar_set(x1, num_attribs, protected_attribs, constraint)
             if generation_utilities.is_discriminatory(x1, similar_x1, model):
                 l_id = np.append(l_id, [x1], axis=0)
