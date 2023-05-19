@@ -18,6 +18,7 @@ def compute_grad(x, model):
     x = tf.constant([x], dtype=tf.float32)
     with tf.GradientTape() as tape:
         tape.watch(x)
+        # change 1: switch gradient from gradient(loss/x) to gradient(y/x)
         y_pred = model(x)
     gradient = tape.gradient(y_pred, x)
     return gradient[0].numpy() if model(x) > 0.5 else -gradient[0].numpy()
@@ -41,6 +42,7 @@ def global_generation(X, seeds, num_attribs, protected_attribs, constraint, mode
                 g_id = np.append(g_id, [x1], axis=0)
                 break
             x2 = generation_utilities.max_diff(x1, similar_x1, model)
+            # change 2 use momentum to boost global generation
             grad1 = decay * grad1 + compute_grad(x1, model)
             grad2 = decay * grad2 + compute_grad(x2, model)
             direction = np.zeros_like(X[0])
@@ -74,6 +76,7 @@ def local_generation(num_attribs, l_num, g_id, protected_attribs, constraint, mo
         suc_iter = 0
         for _ in range(l_num):
             try_times += 1
+            # change 3 use update_interval to reduce the frequency of gradient calculation during local generation
             if suc_iter >= update_interval:
                 similar_x1 = generation_utilities.similar_set(x1, num_attribs, protected_attribs, constraint)
                 x2 = generation_utilities.find_pair(x1, similar_x1, model)
