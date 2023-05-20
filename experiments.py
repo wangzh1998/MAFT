@@ -11,6 +11,7 @@ import generation_utilities
 import time
 import ADF
 import EIDIG
+import MAFT
 
 
 # allocate GPU and set dynamic memory growth
@@ -26,7 +27,8 @@ np.random.seed(42)
 tf.random.set_seed(42)
 
 
-def comparison(num_experiment_round, benchmark, X, protected_attribs, constraint, model, g_num=1000, l_num=1000, decay=0.5, c_num=4, max_iter=10, s_g=1.0, s_l=1.0, epsilon_l=1e-6, fashion='RoundRobin'):
+def comparison(num_experiment_round, benchmark, X, protected_attribs, constraint, model, g_num=1000, l_num=1000, decay=0.5, c_num=4, max_iter=10, s_g=1.0, s_l=1.0, epsilon_l=1e-6, fashion='RoundRobin',
+               perturbation_size=1e-4):
     # compare EIDIG with ADF in terms of effectiveness and efficiency
 
     num_ids = np.array([0] * 3)
@@ -60,21 +62,41 @@ def comparison(num_experiment_round, benchmark, X, protected_attribs, constraint
         num_ids[1] += len(ids_EIDIG_5)
         time_cost[1] += t2-t1
 
+        # t1 = time.time()
+        # ids_EIDIG_INF, gen_EIDIG_INF, total_iter_EIDIG_INF = EIDIG.individual_discrimination_generation(X, seeds, protected_attribs, constraint, model, decay, l_num, l_num+1, max_iter, s_g, s_l, epsilon_l)
+        # np.save('logging_data/logging_data_from_tests/complete_comparison/' + benchmark + '_ids_EIDIG_INF_' + str(round_now) + '.npy', ids_EIDIG_INF)
+        # t2 = time.time()
+        # print('EIDIG-INF:', 'In', total_iter_EIDIG_INF, 'search iterations', len(gen_EIDIG_INF), 'non-duplicate instances are explored', len(ids_EIDIG_INF), 'of which are discriminatory. Time cost:', t2-t1, 's.')
+        # num_ids[2] += len(ids_EIDIG_INF)
+        # time_cost[2] += t2-t1
+
         t1 = time.time()
-        ids_EIDIG_INF, gen_EIDIG_INF, total_iter_EIDIG_INF = EIDIG.individual_discrimination_generation(X, seeds, protected_attribs, constraint, model, decay, l_num, l_num+1, max_iter, s_g, s_l, epsilon_l)
-        np.save('logging_data/logging_data_from_tests/complete_comparison/' + benchmark + '_ids_EIDIG_INF_' + str(round_now) + '.npy', ids_EIDIG_INF)
+        ids_MAFT_5, gen_MAFT_5, total_iter_MAFT_5 = MAFT.individual_discrimination_generation(X, seeds,
+                                                                                                  protected_attribs,
+                                                                                                  constraint, model,
+                                                                                                  decay, l_num, 5,
+                                                                                                  max_iter, s_g, s_l,
+                                                                                                  epsilon_l,
+                                                                                                  perturbation_size)
+        np.save('logging_data/logging_data_from_tests/complete_comparison/' + benchmark + '_ids_MAFT_5_' + str(
+            round_now) + '.npy', ids_MAFT_5)
         t2 = time.time()
-        print('EIDIG-INF:', 'In', total_iter_EIDIG_INF, 'search iterations', len(gen_EIDIG_INF), 'non-duplicate instances are explored', len(ids_EIDIG_INF), 'of which are discriminatory. Time cost:', t2-t1, 's.')
-        num_ids[2] += len(ids_EIDIG_INF)
-        time_cost[2] += t2-t1
+        print('MAFT-5:', 'In', total_iter_MAFT_5, 'search iterations', len(gen_MAFT_5),
+              'non-duplicate instances are explored', len(ids_MAFT_5), 'of which are discriminatory. Time cost:',
+              t2 - t1, 's.')
+        num_ids[2] += len(ids_MAFT_5)
+        time_cost[2] += t2 - t1
 
         print('\n')
-    
+
+    methods = ['ADF', 'EIDIG-5', 'MAFT-5']
     avg_num_ids = num_ids / num_experiment_round
     avg_speed = num_ids / time_cost
     print('Results of complete comparison on', benchmark, 'with g_num set to {} and l_num set to {}'.format(g_num, l_num), ',averaged on', num_experiment_round, 'rounds:')
-    for index, approach in [(0, 'ADF'), (1, 'EIDIG-5'), (2, 'EIDIG-INF')]:
+    for index, approach in enumerate(methods):
         print(approach, ':', avg_num_ids[index], 'individual discriminatory instances are generated at a speed of', avg_speed[index], 'per second.')
+    method_num_speed_result = [[method, avg_num, avg_speed] for method, avg_num, avg_speed in zip(methods, avg_num_ids, avg_speed)]
+    return method_num_speed_result
 
 
 def global_comparison(num_experiment_round, benchmark, X, protected_attribs, constraint, model, decay_list, num_seeds=1000, c_num=4, max_iter=10, s_g=1.0):
