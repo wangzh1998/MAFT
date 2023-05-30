@@ -28,9 +28,9 @@ experiments_data = []
 # test the implementation of ADF, EIDIG-5, EIDIG-INF
 # the individual discriminatory instances generated are saved to 'logging_data/logging_data_from_tests/complete_comparison'
 ROUND = 3 # the number of experiment rounds
-g_num = 20 # the number of seeds used in the global generation phase
-l_num = 20 # the maximum search iteration in the local generation phase
-perturbation_size = 1e-4 # the perturbation size used in the compute_gradient function
+g_num = 100 # the number of seeds used in the global generation phase
+l_num = 100 # the maximum search iteration in the local generation phase
+perturbation_size = 1 # the perturbation size used in the compute_gradient function
 for benchmark, protected_attribs in [('C-a', [0]), ('C-r', [6]), ('C-g', [7]), ('C-a&r', [0,6]), ('C-a&g', [0,7]), ('C-r&g', [6,7])]:
     print('\n', benchmark, ':\n')
     method_num_speed_result = experiments.comparison(ROUND, benchmark, pre_census_income.X_train, protected_attribs, pre_census_income.constraint, adult_model, g_num, l_num, perturbation_size)
@@ -51,15 +51,16 @@ import pickle
 import os
 
 dir = 'logging_data/logging_data_from_tests/complete_comparison_info/'
+iter = '{}x{}_H_{}'.format(g_num, l_num, perturbation_size)
 if not os.path.exists(dir):
     os.makedirs(dir)
-with open(dir + '/complete_comparison_info.pkl', 'wb') as f:
+with open(dir + iter + 'complete_comparison_info.pkl', 'wb') as f:
     pickle.dump(experiments_data, f)
 
 '''
 读取数据
 '''
-with open(dir + 'complete_comparison_info.pkl', 'rb') as f:
+with open(dir + iter + 'complete_comparison_info.pkl', 'rb') as f:
     loaded_experiments_data = pickle.load(f)
 
 
@@ -100,5 +101,5 @@ axs[1].set_title('Avg Speed')
 axs[1].legend()
 
 plt.tight_layout()
+plt.savefig(dir + iter + 'complete_comparison_result.png')
 plt.show()
-plt.savefig('complete_comparison_result.png')
