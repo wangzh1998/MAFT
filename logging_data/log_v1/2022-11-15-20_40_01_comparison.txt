@@ -1,0 +1,331 @@
+# v2 h=1e-4 currently used in paper
+
+ C-a :
+
+--- ROUND 1 ---
+ADF: In 336 search iterations 244 non-duplicate instances are explored 130 of which are discriminatory. Time cost: 9.222881078720093 s.
+EIDIG-5: In 439 search iterations 318 non-duplicate instances are explored 223 of which are discriminatory. Time cost: 5.56738543510437 s.
+EIDIG-INF: In 439 search iterations 306 non-duplicate instances are explored 211 of which are discriminatory. Time cost: 4.876032590866089 s.
+BBDIG-5: In 426 search iterations 300 non-duplicate instances are explored 194 of which are discriminatory. Time cost: 5.6493871212005615 s.
+BBDIG-INF: In 426 search iterations 302 non-duplicate instances are explored 196 of which are discriminatory. Time cost: 4.921843528747559 s.
+
+
+--- ROUND 2 ---
+ADF: In 355 search iterations 262 non-duplicate instances are explored 160 of which are discriminatory. Time cost: 9.663596868515015 s.
+EIDIG-5: In 409 search iterations 296 non-duplicate instances are explored 192 of which are discriminatory. Time cost: 5.498341083526611 s.
+EIDIG-INF: In 409 search iterations 289 non-duplicate instances are explored 177 of which are discriminatory. Time cost: 4.920151233673096 s.
+BBDIG-5: In 411 search iterations 277 non-duplicate instances are explored 165 of which are discriminatory. Time cost: 5.5060505867004395 s.
+BBDIG-INF: In 411 search iterations 303 non-duplicate instances are explored 196 of which are discriminatory. Time cost: 4.810033321380615 s.
+
+
+--- ROUND 3 ---
+ADF: In 382 search iterations 283 non-duplicate instances are explored 150 of which are discriminatory. Time cost: 10.526618242263794 s.
+EIDIG-5: In 399 search iterations 281 non-duplicate instances are explored 159 of which are discriminatory. Time cost: 5.64986777305603 s.
+EIDIG-INF: In 399 search iterations 279 non-duplicate instances are explored 160 of which are discriminatory. Time cost: 5.010614633560181 s.
+BBDIG-5: In 389 search iterations 294 non-duplicate instances are explored 168 of which are discriminatory. Time cost: 6.030168056488037 s.
+BBDIG-INF: In 389 search iterations 276 non-duplicate instances are explored 155 of which are discriminatory. Time cost: 5.33768105506897 s.
+
+
+Results of complete comparison on C-a with g_num set to 20 and l_num set to 20 ,averaged on 3 rounds:
+ADF : 146.66666666666666 individual discriminatory instances are generated at a speed of 15.714285714285714 per second.
+EIDIG-5 : 191.33333333333334 individual discriminatory instances are generated at a speed of 38.266666666666666 per second.
+EIDIG-INF : 182.66666666666666 individual discriminatory instances are generated at a speed of 42.15384615384615 per second.
+BBDIG-5 : 175.66666666666666 individual discriminatory instances are generated at a speed of 32.9375 per second.
+BBDIG-INF : 182.33333333333334 individual discriminatory instances are generated at a speed of 42.07692307692308 per second.
+
+ C-r :
+
+--- ROUND 1 ---
+ADF: In 304 search iterations 242 non-duplicate instances are explored 67 of which are discriminatory. Time cost: 10.121968269348145 s.
+EIDIG-5: In 373 search iterations 279 non-duplicate instances are explored 96 of which are discriminatory. Time cost: 7.244156837463379 s.
+EIDIG-INF: In 373 search iterations 272 non-duplicate instances are explored 93 of which are discriminatory. Time cost: 7.180353403091431 s.
+BBDIG-5: In 325 search iterations 266 non-duplicate instances are explored 81 of which are discriminatory. Time cost: 7.822181463241577 s.
+BBDIG-INF: In 325 search iterations 263 non-duplicate instances are explored 80 of which are discriminatory. Time cost: 7.354143142700195 s.
+
+
+--- ROUND 2 ---
+ADF: In 281 search iterations 222 non-duplicate instances are explored 63 of which are discriminatory. Time cost: 9.757885217666626 s.
+EIDIG-5: In 350 search iterations 271 non-duplicate instances are explored 95 of which are discriminatory. Time cost: 7.615405559539795 s.
+EIDIG-INF: In 350 search iterations 261 non-duplicate instances are explored 91 of which are discriminatory. Time cost: 8.07269287109375 s.
+BBDIG-5: In 368 search iterations 273 non-duplicate instances are explored 112 of which are discriminatory. Time cost: 8.272134780883789 s.
+BBDIG-INF: In 368 search iterations 271 non-duplicate instances are explored 100 of which are discriminatory. Time cost: 8.533615589141846 s.
+
+
+--- ROUND 3 ---
+ADF: In 343 search iterations 272 non-duplicate instances are explored 88 of which are discriminatory. Time cost: 15.359978199005127 s.
+EIDIG-5: In 310 search iterations 238 non-duplicate instances are explored 49 of which are discriminatory. Time cost: 10.186030864715576 s.
+EIDIG-INF: In 310 search iterations 243 non-duplicate instances are explored 52 of which are discriminatory. Time cost: 10.5948805809021 s.
+BBDIG-5: In 342 search iterations 254 non-duplicate instances are explored 70 of which are discriminatory. Time cost: 9.750271797180176 s.
+BBDIG-INF: In 342 search iterations 261 non-duplicate instances are explored 70 of which are discriminatory. Time cost: 8.564502716064453 s.
+
+
+Results of complete comparison on C-r with g_num set to 20 and l_num set to 20 ,averaged on 3 rounds:
+ADF : 72.66666666666667 individual discriminatory instances are generated at a speed of 6.411764705882353 per second.
+EIDIG-5 : 80.0 individual discriminatory instances are generated at a speed of 10.0 per second.
+EIDIG-INF : 78.66666666666667 individual discriminatory instances are generated at a speed of 9.44 per second.
+BBDIG-5 : 87.66666666666667 individual discriminatory instances are generated at a speed of 10.958333333333334 per second.
+BBDIG-INF : 83.33333333333333 individual discriminatory instances are generated at a speed of 10.869565217391305 per second.
+
+ C-g :
+
+--- ROUND 1 ---
+ADF: In 241 search iterations 188 non-duplicate instances are explored 25 of which are discriminatory. Time cost: 7.052628993988037 s.
+EIDIG-5: In 302 search iterations 247 non-duplicate instances are explored 59 of which are discriminatory. Time cost: 5.864815950393677 s.
+EIDIG-INF: In 302 search iterations 258 non-duplicate instances are explored 63 of which are discriminatory. Time cost: 5.659509897232056 s.
+BBDIG-5: In 302 search iterations 246 non-duplicate instances are explored 54 of which are discriminatory. Time cost: 6.029630899429321 s.
+BBDIG-INF: In 302 search iterations 242 non-duplicate instances are explored 47 of which are discriminatory. Time cost: 5.759654521942139 s.
+
+
+--- ROUND 2 ---
+ADF: In 237 search iterations 192 non-duplicate instances are explored 22 of which are discriminatory. Time cost: 6.793323755264282 s.
+EIDIG-5: In 284 search iterations 241 non-duplicate instances are explored 46 of which are discriminatory. Time cost: 4.931862115859985 s.
+EIDIG-INF: In 284 search iterations 233 non-duplicate instances are explored 42 of which are discriminatory. Time cost: 4.893707275390625 s.
+BBDIG-5: In 271 search iterations 241 non-duplicate instances are explored 39 of which are discriminatory. Time cost: 5.463518857955933 s.
+BBDIG-INF: In 271 search iterations 235 non-duplicate instances are explored 33 of which are discriminatory. Time cost: 5.214521169662476 s.
+
+
+--- ROUND 3 ---
+ADF: In 280 search iterations 195 non-duplicate instances are explored 51 of which are discriminatory. Time cost: 7.692277193069458 s.
+EIDIG-5: In 310 search iterations 247 non-duplicate instances are explored 86 of which are discriminatory. Time cost: 5.326701402664185 s.
+EIDIG-INF: In 310 search iterations 245 non-duplicate instances are explored 82 of which are discriminatory. Time cost: 4.380853176116943 s.
+BBDIG-5: In 347 search iterations 264 non-duplicate instances are explored 99 of which are discriminatory. Time cost: 5.220150709152222 s.
+BBDIG-INF: In 347 search iterations 261 non-duplicate instances are explored 99 of which are discriminatory. Time cost: 4.913526296615601 s.
+
+
+Results of complete comparison on C-g with g_num set to 20 and l_num set to 20 ,averaged on 3 rounds:
+ADF : 32.666666666666664 individual discriminatory instances are generated at a speed of 4.9 per second.
+EIDIG-5 : 63.666666666666664 individual discriminatory instances are generated at a speed of 13.642857142857142 per second.
+EIDIG-INF : 62.333333333333336 individual discriminatory instances are generated at a speed of 14.384615384615385 per second.
+BBDIG-5 : 64.0 individual discriminatory instances are generated at a speed of 12.0 per second.
+BBDIG-INF : 59.666666666666664 individual discriminatory instances are generated at a speed of 12.785714285714286 per second.
+
+ C-a&r :
+
+--- ROUND 1 ---
+ADF: In 408 search iterations 289 non-duplicate instances are explored 182 of which are discriminatory. Time cost: 30.135098218917847 s.
+EIDIG-5: In 451 search iterations 336 non-duplicate instances are explored 253 of which are discriminatory. Time cost: 14.193776845932007 s.
+EIDIG-INF: In 451 search iterations 299 non-duplicate instances are explored 213 of which are discriminatory. Time cost: 12.35673999786377 s.
+BBDIG-5: In 452 search iterations 319 non-duplicate instances are explored 240 of which are discriminatory. Time cost: 15.98872685432434 s.
+BBDIG-INF: In 452 search iterations 300 non-duplicate instances are explored 209 of which are discriminatory. Time cost: 14.281455516815186 s.
+
+
+--- ROUND 2 ---
+ADF: In 429 search iterations 306 non-duplicate instances are explored 206 of which are discriminatory. Time cost: 30.53727078437805 s.
+EIDIG-5: In 419 search iterations 294 non-duplicate instances are explored 199 of which are discriminatory. Time cost: 15.207493543624878 s.
+EIDIG-INF: In 419 search iterations 313 non-duplicate instances are explored 213 of which are discriminatory. Time cost: 14.33424997329712 s.
+BBDIG-5: In 464 search iterations 320 non-duplicate instances are explored 232 of which are discriminatory. Time cost: 16.32687282562256 s.
+BBDIG-INF: In 464 search iterations 325 non-duplicate instances are explored 241 of which are discriminatory. Time cost: 14.117147445678711 s.
+
+
+--- ROUND 3 ---
+ADF: In 403 search iterations 299 non-duplicate instances are explored 180 of which are discriminatory. Time cost: 30.645918369293213 s.
+EIDIG-5: In 452 search iterations 321 non-duplicate instances are explored 236 of which are discriminatory. Time cost: 18.66393542289734 s.
+EIDIG-INF: In 452 search iterations 319 non-duplicate instances are explored 219 of which are discriminatory. Time cost: 15.292954683303833 s.
+BBDIG-5: In 454 search iterations 323 non-duplicate instances are explored 241 of which are discriminatory. Time cost: 20.582890510559082 s.
+BBDIG-INF: In 454 search iterations 314 non-duplicate instances are explored 225 of which are discriminatory. Time cost: 16.535818576812744 s.
+
+
+Results of complete comparison on C-a&r with g_num set to 20 and l_num set to 20 ,averaged on 3 rounds:
+ADF : 189.33333333333334 individual discriminatory instances are generated at a speed of 6.311111111111111 per second.
+EIDIG-5 : 229.33333333333334 individual discriminatory instances are generated at a speed of 14.638297872340425 per second.
+EIDIG-INF : 215.0 individual discriminatory instances are generated at a speed of 15.731707317073171 per second.
+BBDIG-5 : 237.66666666666666 individual discriminatory instances are generated at a speed of 13.980392156862745 per second.
+BBDIG-INF : 225.0 individual discriminatory instances are generated at a speed of 15.340909090909092 per second.
+
+ C-a&g :
+
+--- ROUND 1 ---
+ADF: In 312 search iterations 249 non-duplicate instances are explored 110 of which are discriminatory. Time cost: 13.049336910247803 s.
+EIDIG-5: In 485 search iterations 347 non-duplicate instances are explored 225 of which are discriminatory. Time cost: 10.428098201751709 s.
+EIDIG-INF: In 485 search iterations 366 non-duplicate instances are explored 240 of which are discriminatory. Time cost: 8.843472957611084 s.
+BBDIG-5: In 467 search iterations 358 non-duplicate instances are explored 224 of which are discriminatory. Time cost: 9.816898107528687 s.
+BBDIG-INF: In 467 search iterations 346 non-duplicate instances are explored 212 of which are discriminatory. Time cost: 9.005264282226562 s.
+
+
+--- ROUND 2 ---
+ADF: In 337 search iterations 236 non-duplicate instances are explored 148 of which are discriminatory. Time cost: 14.386372089385986 s.
+EIDIG-5: In 455 search iterations 324 non-duplicate instances are explored 232 of which are discriminatory. Time cost: 8.79447317123413 s.
+EIDIG-INF: In 455 search iterations 324 non-duplicate instances are explored 233 of which are discriminatory. Time cost: 7.966864585876465 s.
+BBDIG-5: In 439 search iterations 327 non-duplicate instances are explored 235 of which are discriminatory. Time cost: 9.538701295852661 s.
+BBDIG-INF: In 439 search iterations 307 non-duplicate instances are explored 214 of which are discriminatory. Time cost: 8.082875490188599 s.
+
+
+--- ROUND 3 ---
+ADF: In 354 search iterations 251 non-duplicate instances are explored 173 of which are discriminatory. Time cost: 14.239695072174072 s.
+EIDIG-5: In 455 search iterations 306 non-duplicate instances are explored 242 of which are discriminatory. Time cost: 7.923970460891724 s.
+EIDIG-INF: In 455 search iterations 317 non-duplicate instances are explored 239 of which are discriminatory. Time cost: 6.9242026805877686 s.
+BBDIG-5: In 436 search iterations 312 non-duplicate instances are explored 241 of which are discriminatory. Time cost: 7.77407693862915 s.
+BBDIG-INF: In 436 search iterations 300 non-duplicate instances are explored 232 of which are discriminatory. Time cost: 6.877160549163818 s.
+
+
+Results of complete comparison on C-a&g with g_num set to 20 and l_num set to 20 ,averaged on 3 rounds:
+ADF : 143.66666666666666 individual discriminatory instances are generated at a speed of 10.512195121951219 per second.
+EIDIG-5 : 233.0 individual discriminatory instances are generated at a speed of 27.96 per second.
+EIDIG-INF : 237.33333333333334 individual discriminatory instances are generated at a speed of 33.904761904761905 per second.
+BBDIG-5 : 233.33333333333334 individual discriminatory instances are generated at a speed of 28.0 per second.
+BBDIG-INF : 219.33333333333334 individual discriminatory instances are generated at a speed of 28.608695652173914 per second.
+
+ C-r&g :
+
+--- ROUND 1 ---
+ADF: In 276 search iterations 199 non-duplicate instances are explored 69 of which are discriminatory. Time cost: 14.073215246200562 s.
+EIDIG-5: In 372 search iterations 280 non-duplicate instances are explored 138 of which are discriminatory. Time cost: 10.88405466079712 s.
+EIDIG-INF: In 372 search iterations 294 non-duplicate instances are explored 134 of which are discriminatory. Time cost: 9.925540924072266 s.
+BBDIG-5: In 368 search iterations 300 non-duplicate instances are explored 157 of which are discriminatory. Time cost: 10.279148817062378 s.
+BBDIG-INF: In 368 search iterations 292 non-duplicate instances are explored 152 of which are discriminatory. Time cost: 9.733688592910767 s.
+
+
+--- ROUND 2 ---
+ADF: In 299 search iterations 230 non-duplicate instances are explored 88 of which are discriminatory. Time cost: 15.122591257095337 s.
+EIDIG-5: In 368 search iterations 291 non-duplicate instances are explored 123 of which are discriminatory. Time cost: 12.04256558418274 s.
+EIDIG-INF: In 368 search iterations 287 non-duplicate instances are explored 129 of which are discriminatory. Time cost: 10.60158371925354 s.
+BBDIG-5: In 396 search iterations 302 non-duplicate instances are explored 158 of which are discriminatory. Time cost: 10.939912796020508 s.
+BBDIG-INF: In 396 search iterations 302 non-duplicate instances are explored 150 of which are discriminatory. Time cost: 10.474564552307129 s.
+
+
+--- ROUND 3 ---
+ADF: In 313 search iterations 225 non-duplicate instances are explored 94 of which are discriminatory. Time cost: 15.737032175064087 s.
+EIDIG-5: In 396 search iterations 288 non-duplicate instances are explored 125 of which are discriminatory. Time cost: 11.088664293289185 s.
+EIDIG-INF: In 396 search iterations 285 non-duplicate instances are explored 120 of which are discriminatory. Time cost: 10.31313180923462 s.
+BBDIG-5: In 376 search iterations 286 non-duplicate instances are explored 139 of which are discriminatory. Time cost: 10.770363330841064 s.
+BBDIG-INF: In 376 search iterations 274 non-duplicate instances are explored 123 of which are discriminatory. Time cost: 10.112953662872314 s.
+
+
+Results of complete comparison on C-r&g with g_num set to 20 and l_num set to 20 ,averaged on 3 rounds:
+ADF : 83.66666666666667 individual discriminatory instances are generated at a speed of 5.704545454545454 per second.
+EIDIG-5 : 128.66666666666666 individual discriminatory instances are generated at a speed of 11.696969696969697 per second.
+EIDIG-INF : 127.66666666666667 individual discriminatory instances are generated at a speed of 13.206896551724139 per second.
+BBDIG-5 : 151.33333333333334 individual discriminatory instances are generated at a speed of 15.133333333333333 per second.
+BBDIG-INF : 141.66666666666666 individual discriminatory instances are generated at a speed of 14.655172413793103 per second.
+
+ G-g :
+
+--- ROUND 1 ---
+ADF: In 306 search iterations 210 non-duplicate instances are explored 56 of which are discriminatory. Time cost: 9.153225898742676 s.
+EIDIG-5: In 415 search iterations 272 non-duplicate instances are explored 106 of which are discriminatory. Time cost: 6.555145502090454 s.
+EIDIG-INF: In 415 search iterations 266 non-duplicate instances are explored 117 of which are discriminatory. Time cost: 6.155547857284546 s.
+BBDIG-5: In 353 search iterations 224 non-duplicate instances are explored 76 of which are discriminatory. Time cost: 6.233839511871338 s.
+BBDIG-INF: In 353 search iterations 244 non-duplicate instances are explored 83 of which are discriminatory. Time cost: 6.126307010650635 s.
+
+
+--- ROUND 2 ---
+ADF: In 277 search iterations 212 non-duplicate instances are explored 54 of which are discriminatory. Time cost: 8.470084190368652 s.
+EIDIG-5: In 366 search iterations 242 non-duplicate instances are explored 84 of which are discriminatory. Time cost: 7.651463508605957 s.
+EIDIG-INF: In 366 search iterations 240 non-duplicate instances are explored 83 of which are discriminatory. Time cost: 7.603603363037109 s.
+BBDIG-5: In 310 search iterations 222 non-duplicate instances are explored 62 of which are discriminatory. Time cost: 7.5881335735321045 s.
+BBDIG-INF: In 310 search iterations 222 non-duplicate instances are explored 62 of which are discriminatory. Time cost: 6.155388116836548 s.
+
+
+--- ROUND 3 ---
+ADF: In 246 search iterations 181 non-duplicate instances are explored 26 of which are discriminatory. Time cost: 8.058642148971558 s.
+EIDIG-5: In 346 search iterations 237 non-duplicate instances are explored 68 of which are discriminatory. Time cost: 6.641324996948242 s.
+EIDIG-INF: In 346 search iterations 238 non-duplicate instances are explored 68 of which are discriminatory. Time cost: 6.468940258026123 s.
+BBDIG-5: In 342 search iterations 229 non-duplicate instances are explored 60 of which are discriminatory. Time cost: 7.887082099914551 s.
+BBDIG-INF: In 342 search iterations 249 non-duplicate instances are explored 80 of which are discriminatory. Time cost: 6.886671781539917 s.
+
+
+Results of complete comparison on G-g with g_num set to 20 and l_num set to 20 ,averaged on 3 rounds:
+ADF : 45.333333333333336 individual discriminatory instances are generated at a speed of 5.44 per second.
+EIDIG-5 : 86.0 individual discriminatory instances are generated at a speed of 13.578947368421053 per second.
+EIDIG-INF : 89.33333333333333 individual discriminatory instances are generated at a speed of 14.105263157894736 per second.
+BBDIG-5 : 66.0 individual discriminatory instances are generated at a speed of 9.9 per second.
+BBDIG-INF : 75.0 individual discriminatory instances are generated at a speed of 12.5 per second.
+
+ G-a :
+
+--- ROUND 1 ---
+ADF: In 431 search iterations 280 non-duplicate instances are explored 181 of which are discriminatory. Time cost: 13.133182287216187 s.
+EIDIG-5: In 449 search iterations 279 non-duplicate instances are explored 189 of which are discriminatory. Time cost: 6.811840534210205 s.
+EIDIG-INF: In 449 search iterations 284 non-duplicate instances are explored 179 of which are discriminatory. Time cost: 5.831477642059326 s.
+BBDIG-5: In 472 search iterations 297 non-duplicate instances are explored 205 of which are discriminatory. Time cost: 7.428533315658569 s.
+BBDIG-INF: In 472 search iterations 294 non-duplicate instances are explored 203 of which are discriminatory. Time cost: 6.153564929962158 s.
+
+
+--- ROUND 2 ---
+ADF: In 426 search iterations 266 non-duplicate instances are explored 149 of which are discriminatory. Time cost: 13.004682302474976 s.
+EIDIG-5: In 476 search iterations 286 non-duplicate instances are explored 190 of which are discriminatory. Time cost: 8.037339448928833 s.
+EIDIG-INF: In 476 search iterations 296 non-duplicate instances are explored 200 of which are discriminatory. Time cost: 6.6898088455200195 s.
+BBDIG-5: In 436 search iterations 279 non-duplicate instances are explored 180 of which are discriminatory. Time cost: 6.903221130371094 s.
+BBDIG-INF: In 436 search iterations 278 non-duplicate instances are explored 182 of which are discriminatory. Time cost: 6.985187768936157 s.
+
+
+--- ROUND 3 ---
+ADF: In 410 search iterations 259 non-duplicate instances are explored 156 of which are discriminatory. Time cost: 13.963963508605957 s.
+EIDIG-5: In 473 search iterations 279 non-duplicate instances are explored 219 of which are discriminatory. Time cost: 6.784373044967651 s.
+EIDIG-INF: In 473 search iterations 267 non-duplicate instances are explored 204 of which are discriminatory. Time cost: 5.576554536819458 s.
+BBDIG-5: In 440 search iterations 262 non-duplicate instances are explored 177 of which are discriminatory. Time cost: 6.666959524154663 s.
+BBDIG-INF: In 440 search iterations 262 non-duplicate instances are explored 181 of which are discriminatory. Time cost: 6.355254650115967 s.
+
+
+Results of complete comparison on G-a with g_num set to 20 and l_num set to 20 ,averaged on 3 rounds:
+ADF : 162.0 individual discriminatory instances are generated at a speed of 12.461538461538462 per second.
+EIDIG-5 : 199.33333333333334 individual discriminatory instances are generated at a speed of 29.9 per second.
+EIDIG-INF : 194.33333333333334 individual discriminatory instances are generated at a speed of 36.4375 per second.
+BBDIG-5 : 187.33333333333334 individual discriminatory instances are generated at a speed of 29.57894736842105 per second.
+BBDIG-INF : 188.66666666666666 individual discriminatory instances are generated at a speed of 31.444444444444443 per second.
+
+ G-g&a :
+
+--- ROUND 1 ---
+ADF: In 408 search iterations 230 non-duplicate instances are explored 142 of which are discriminatory. Time cost: 26.166470289230347 s.
+EIDIG-5: In 439 search iterations 245 non-duplicate instances are explored 187 of which are discriminatory. Time cost: 11.48737096786499 s.
+EIDIG-INF: In 439 search iterations 237 non-duplicate instances are explored 175 of which are discriminatory. Time cost: 9.529174089431763 s.
+BBDIG-5: In 460 search iterations 270 non-duplicate instances are explored 214 of which are discriminatory. Time cost: 12.317116737365723 s.
+BBDIG-INF: In 460 search iterations 247 non-duplicate instances are explored 181 of which are discriminatory. Time cost: 9.80107045173645 s.
+
+
+--- ROUND 2 ---
+ADF: In 439 search iterations 287 non-duplicate instances are explored 202 of which are discriminatory. Time cost: 26.339449167251587 s.
+EIDIG-5: In 491 search iterations 279 non-duplicate instances are explored 210 of which are discriminatory. Time cost: 14.395262479782104 s.
+EIDIG-INF: In 491 search iterations 291 non-duplicate instances are explored 214 of which are discriminatory. Time cost: 11.049115419387817 s.
+BBDIG-5: In 460 search iterations 281 non-duplicate instances are explored 195 of which are discriminatory. Time cost: 14.011687755584717 s.
+BBDIG-INF: In 460 search iterations 286 non-duplicate instances are explored 193 of which are discriminatory. Time cost: 11.938339948654175 s.
+
+
+--- ROUND 3 ---
+ADF: In 404 search iterations 247 non-duplicate instances are explored 151 of which are discriminatory. Time cost: 25.070890188217163 s.
+EIDIG-5: In 484 search iterations 285 non-duplicate instances are explored 221 of which are discriminatory. Time cost: 13.618535041809082 s.
+EIDIG-INF: In 484 search iterations 266 non-duplicate instances are explored 207 of which are discriminatory. Time cost: 11.943032264709473 s.
+BBDIG-5: In 467 search iterations 275 non-duplicate instances are explored 217 of which are discriminatory. Time cost: 13.756308317184448 s.
+BBDIG-INF: In 467 search iterations 277 non-duplicate instances are explored 216 of which are discriminatory. Time cost: 11.724729776382446 s.
+
+
+Results of complete comparison on G-g&a with g_num set to 20 and l_num set to 20 ,averaged on 3 rounds:
+ADF : 165.0 individual discriminatory instances are generated at a speed of 6.428571428571429 per second.
+EIDIG-5 : 206.0 individual discriminatory instances are generated at a speed of 16.263157894736842 per second.
+EIDIG-INF : 198.66666666666666 individual discriminatory instances are generated at a speed of 19.225806451612904 per second.
+BBDIG-5 : 208.66666666666666 individual discriminatory instances are generated at a speed of 16.05128205128205 per second.
+BBDIG-INF : 196.66666666666666 individual discriminatory instances are generated at a speed of 19.032258064516128 per second.
+
+B-a:
+
+--- ROUND 1 ---
+ADF: In 365 search iterations 268 non-duplicate instances are explored 139 of which are discriminatory. Time cost: 10.674582481384277 s.
+EIDIG-5: In 441 search iterations 268 non-duplicate instances are explored 178 of which are discriminatory. Time cost: 5.83861517906189 s.
+EIDIG-INF: In 441 search iterations 281 non-duplicate instances are explored 190 of which are discriminatory. Time cost: 4.977920770645142 s.
+BBDIG-5: In 456 search iterations 295 non-duplicate instances are explored 213 of which are discriminatory. Time cost: 6.036301136016846 s.
+BBDIG-INF: In 456 search iterations 285 non-duplicate instances are explored 206 of which are discriminatory. Time cost: 4.8394999504089355 s.
+
+
+--- ROUND 2 ---
+ADF: In 375 search iterations 265 non-duplicate instances are explored 150 of which are discriminatory. Time cost: 10.894954204559326 s.
+EIDIG-5: In 471 search iterations 304 non-duplicate instances are explored 199 of which are discriminatory. Time cost: 6.2557902336120605 s.
+EIDIG-INF: In 471 search iterations 321 non-duplicate instances are explored 222 of which are discriminatory. Time cost: 5.40908145904541 s.
+BBDIG-5: In 470 search iterations 281 non-duplicate instances are explored 191 of which are discriminatory. Time cost: 6.51825737953186 s.
+BBDIG-INF: In 470 search iterations 296 non-duplicate instances are explored 203 of which are discriminatory. Time cost: 5.434958219528198 s.
+
+
+--- ROUND 3 ---
+ADF: In 414 search iterations 273 non-duplicate instances are explored 163 of which are discriminatory. Time cost: 12.5345778465271 s.
+EIDIG-5: In 459 search iterations 295 non-duplicate instances are explored 192 of which are discriminatory. Time cost: 6.18325400352478 s.
+EIDIG-INF: In 459 search iterations 274 non-duplicate instances are explored 193 of which are discriminatory. Time cost: 6.593257188796997 s.
+BBDIG-5: In 444 search iterations 281 non-duplicate instances are explored 183 of which are discriminatory. Time cost: 6.261368751525879 s.
+BBDIG-INF: In 444 search iterations 265 non-duplicate instances are explored 173 of which are discriminatory. Time cost: 6.050259351730347 s.
+
+
+Results of complete comparison on B-a with g_num set to 20 and l_num set to 20 ,averaged on 3 rounds:
+ADF : 150.66666666666666 individual discriminatory instances are generated at a speed of 14.125 per second.
+EIDIG-5 : 189.66666666666666 individual discriminatory instances are generated at a speed of 33.470588235294116 per second.
+EIDIG-INF : 201.66666666666666 individual discriminatory instances are generated at a speed of 40.333333333333336 per second.
+BBDIG-5 : 195.66666666666666 individual discriminatory instances are generated at a speed of 32.611111111111114 per second.
+BBDIG-INF : 194.0 individual discriminatory instances are generated at a speed of 38.8 per second.

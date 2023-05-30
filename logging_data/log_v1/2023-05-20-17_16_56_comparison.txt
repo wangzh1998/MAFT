@@ -1,0 +1,250 @@
+
+ C-a :
+
+--- ROUND 1 ---
+ADF: In 336 search iterations 244 non-duplicate instances are explored 130 of which are discriminatory. Time cost: 9.815813779830933 s.
+EIDIG-5: In 439 search iterations 318 non-duplicate instances are explored 223 of which are discriminatory. Time cost: 5.648643970489502 s.
+MAFT-5: In 426 search iterations 311 non-duplicate instances are explored 203 of which are discriminatory. Time cost: 5.922972679138184 s.
+
+
+--- ROUND 2 ---
+ADF: In 303 search iterations 237 non-duplicate instances are explored 83 of which are discriminatory. Time cost: 9.027366161346436 s.
+EIDIG-5: In 420 search iterations 310 non-duplicate instances are explored 193 of which are discriminatory. Time cost: 6.260011911392212 s.
+MAFT-5: In 438 search iterations 311 non-duplicate instances are explored 204 of which are discriminatory. Time cost: 6.3899407386779785 s.
+
+
+--- ROUND 3 ---
+ADF: In 368 search iterations 249 non-duplicate instances are explored 162 of which are discriminatory. Time cost: 10.774904251098633 s.
+EIDIG-5: In 408 search iterations 288 non-duplicate instances are explored 195 of which are discriminatory. Time cost: 5.052044630050659 s.
+MAFT-5: In 448 search iterations 295 non-duplicate instances are explored 207 of which are discriminatory. Time cost: 5.47430682182312 s.
+
+
+Results of complete comparison on C-a with g_num set to 20 and l_num set to 20 ,averaged on 3 rounds:
+ADF : 125.0 individual discriminatory instances are generated at a speed of 13.392857142857142 per second.
+EIDIG-5 : 203.66666666666666 individual discriminatory instances are generated at a speed of 38.1875 per second.
+MAFT-5 : 204.66666666666666 individual discriminatory instances are generated at a speed of 38.375 per second.
+
+ C-r :
+
+--- ROUND 1 ---
+ADF: In 335 search iterations 225 non-duplicate instances are explored 82 of which are discriminatory. Time cost: 11.25600004196167 s.
+EIDIG-5: In 373 search iterations 273 non-duplicate instances are explored 116 of which are discriminatory. Time cost: 7.003394603729248 s.
+MAFT-5: In 408 search iterations 297 non-duplicate instances are explored 142 of which are discriminatory. Time cost: 7.542555332183838 s.
+
+
+--- ROUND 2 ---
+ADF: In 217 search iterations 193 non-duplicate instances are explored 8 of which are discriminatory. Time cost: 9.387410640716553 s.
+EIDIG-5: In 302 search iterations 242 non-duplicate instances are explored 64 of which are discriminatory. Time cost: 7.749772787094116 s.
+MAFT-5: In 300 search iterations 253 non-duplicate instances are explored 67 of which are discriminatory. Time cost: 8.306543111801147 s.
+
+
+--- ROUND 3 ---
+ADF: In 264 search iterations 219 non-duplicate instances are explored 42 of which are discriminatory. Time cost: 10.523813486099243 s.
+EIDIG-5: In 328 search iterations 277 non-duplicate instances are explored 88 of which are discriminatory. Time cost: 7.69939398765564 s.
+MAFT-5: In 312 search iterations 253 non-duplicate instances are explored 69 of which are discriminatory. Time cost: 7.669607162475586 s.
+
+
+Results of complete comparison on C-r with g_num set to 20 and l_num set to 20 ,averaged on 3 rounds:
+ADF : 44.0 individual discriminatory instances are generated at a speed of 4.4 per second.
+EIDIG-5 : 89.33333333333333 individual discriminatory instances are generated at a speed of 12.761904761904763 per second.
+MAFT-5 : 92.66666666666667 individual discriminatory instances are generated at a speed of 12.636363636363637 per second.
+
+ C-g :
+
+--- ROUND 1 ---
+ADF: In 270 search iterations 213 non-duplicate instances are explored 43 of which are discriminatory. Time cost: 6.369924068450928 s.
+EIDIG-5: In 264 search iterations 231 non-duplicate instances are explored 36 of which are discriminatory. Time cost: 4.431678056716919 s.
+MAFT-5: In 263 search iterations 234 non-duplicate instances are explored 29 of which are discriminatory. Time cost: 4.625436067581177 s.
+
+
+--- ROUND 2 ---
+ADF: In 290 search iterations 224 non-duplicate instances are explored 53 of which are discriminatory. Time cost: 7.310237407684326 s.
+EIDIG-5: In 308 search iterations 237 non-duplicate instances are explored 50 of which are discriminatory. Time cost: 4.618663549423218 s.
+MAFT-5: In 296 search iterations 244 non-duplicate instances are explored 57 of which are discriminatory. Time cost: 4.9352476596832275 s.
+
+
+--- ROUND 3 ---
+ADF: In 264 search iterations 201 non-duplicate instances are explored 40 of which are discriminatory. Time cost: 6.884372234344482 s.
+EIDIG-5: In 294 search iterations 230 non-duplicate instances are explored 41 of which are discriminatory. Time cost: 4.441924333572388 s.
+MAFT-5: In 232 search iterations 211 non-duplicate instances are explored 16 of which are discriminatory. Time cost: 4.652363538742065 s.
+
+
+Results of complete comparison on C-g with g_num set to 20 and l_num set to 20 ,averaged on 3 rounds:
+ADF : 45.333333333333336 individual discriminatory instances are generated at a speed of 7.157894736842105 per second.
+EIDIG-5 : 42.333333333333336 individual discriminatory instances are generated at a speed of 10.583333333333334 per second.
+MAFT-5 : 34.0 individual discriminatory instances are generated at a speed of 8.5 per second.
+
+ C-a&r :
+
+--- ROUND 1 ---
+ADF: In 398 search iterations 297 non-duplicate instances are explored 206 of which are discriminatory. Time cost: 27.413588762283325 s.
+EIDIG-5: In 455 search iterations 328 non-duplicate instances are explored 252 of which are discriminatory. Time cost: 14.648895502090454 s.
+MAFT-5: In 454 search iterations 313 non-duplicate instances are explored 249 of which are discriminatory. Time cost: 15.365300178527832 s.
+
+
+--- ROUND 2 ---
+ADF: In 374 search iterations 263 non-duplicate instances are explored 187 of which are discriminatory. Time cost: 26.333879947662354 s.
+EIDIG-5: In 452 search iterations 314 non-duplicate instances are explored 222 of which are discriminatory. Time cost: 15.901723146438599 s.
+MAFT-5: In 417 search iterations 301 non-duplicate instances are explored 199 of which are discriminatory. Time cost: 15.331467151641846 s.
+
+
+--- ROUND 3 ---
+ADF: In 391 search iterations 286 non-duplicate instances are explored 184 of which are discriminatory. Time cost: 26.95683479309082 s.
+EIDIG-5: In 451 search iterations 303 non-duplicate instances are explored 223 of which are discriminatory. Time cost: 17.29486107826233 s.
+MAFT-5: In 459 search iterations 323 non-duplicate instances are explored 232 of which are discriminatory. Time cost: 16.877971172332764 s.
+
+
+Results of complete comparison on C-a&r with g_num set to 20 and l_num set to 20 ,averaged on 3 rounds:
+ADF : 192.33333333333334 individual discriminatory instances are generated at a speed of 7.30379746835443 per second.
+EIDIG-5 : 232.33333333333334 individual discriminatory instances are generated at a speed of 15.152173913043478 per second.
+MAFT-5 : 226.66666666666666 individual discriminatory instances are generated at a speed of 14.782608695652174 per second.
+
+ C-a&g :
+
+--- ROUND 1 ---
+ADF: In 362 search iterations 286 non-duplicate instances are explored 183 of which are discriminatory. Time cost: 14.222938537597656 s.
+EIDIG-5: In 424 search iterations 304 non-duplicate instances are explored 221 of which are discriminatory. Time cost: 7.97519326210022 s.
+MAFT-5: In 428 search iterations 320 non-duplicate instances are explored 236 of which are discriminatory. Time cost: 8.317150831222534 s.
+
+
+--- ROUND 2 ---
+ADF: In 382 search iterations 284 non-duplicate instances are explored 180 of which are discriminatory. Time cost: 15.127279996871948 s.
+EIDIG-5: In 461 search iterations 335 non-duplicate instances are explored 236 of which are discriminatory. Time cost: 8.718554019927979 s.
+MAFT-5: In 475 search iterations 346 non-duplicate instances are explored 247 of which are discriminatory. Time cost: 9.281891345977783 s.
+
+
+--- ROUND 3 ---
+ADF: In 383 search iterations 262 non-duplicate instances are explored 171 of which are discriminatory. Time cost: 15.047786712646484 s.
+EIDIG-5: In 405 search iterations 304 non-duplicate instances are explored 201 of which are discriminatory. Time cost: 7.552931785583496 s.
+MAFT-5: In 401 search iterations 293 non-duplicate instances are explored 193 of which are discriminatory. Time cost: 8.277741432189941 s.
+
+
+Results of complete comparison on C-a&g with g_num set to 20 and l_num set to 20 ,averaged on 3 rounds:
+ADF : 178.0 individual discriminatory instances are generated at a speed of 12.136363636363637 per second.
+EIDIG-5 : 219.33333333333334 individual discriminatory instances are generated at a speed of 29.90909090909091 per second.
+MAFT-5 : 225.33333333333334 individual discriminatory instances are generated at a speed of 27.04 per second.
+
+ C-r&g :
+
+--- ROUND 1 ---
+ADF: In 359 search iterations 275 non-duplicate instances are explored 128 of which are discriminatory. Time cost: 16.885835647583008 s.
+EIDIG-5: In 420 search iterations 310 non-duplicate instances are explored 178 of which are discriminatory. Time cost: 9.651433944702148 s.
+MAFT-5: In 387 search iterations 274 non-duplicate instances are explored 152 of which are discriminatory. Time cost: 9.360666990280151 s.
+
+
+--- ROUND 2 ---
+ADF: In 348 search iterations 265 non-duplicate instances are explored 109 of which are discriminatory. Time cost: 16.46606159210205 s.
+EIDIG-5: In 394 search iterations 287 non-duplicate instances are explored 140 of which are discriminatory. Time cost: 10.487798929214478 s.
+MAFT-5: In 394 search iterations 284 non-duplicate instances are explored 158 of which are discriminatory. Time cost: 9.517678022384644 s.
+
+
+--- ROUND 3 ---
+ADF: In 380 search iterations 287 non-duplicate instances are explored 162 of which are discriminatory. Time cost: 16.942197561264038 s.
+EIDIG-5: In 355 search iterations 265 non-duplicate instances are explored 119 of which are discriminatory. Time cost: 9.780182600021362 s.
+MAFT-5: In 356 search iterations 282 non-duplicate instances are explored 134 of which are discriminatory. Time cost: 10.09993600845337 s.
+
+
+Results of complete comparison on C-r&g with g_num set to 20 and l_num set to 20 ,averaged on 3 rounds:
+ADF : 133.0 individual discriminatory instances are generated at a speed of 8.3125 per second.
+EIDIG-5 : 145.66666666666666 individual discriminatory instances are generated at a speed of 15.607142857142858 per second.
+MAFT-5 : 148.0 individual discriminatory instances are generated at a speed of 15.857142857142858 per second.
+
+ G-g :
+
+--- ROUND 1 ---
+ADF: In 253 search iterations 205 non-duplicate instances are explored 30 of which are discriminatory. Time cost: 7.761564254760742 s.
+EIDIG-5: In 312 search iterations 237 non-duplicate instances are explored 58 of which are discriminatory. Time cost: 6.04075026512146 s.
+MAFT-5: In 320 search iterations 224 non-duplicate instances are explored 57 of which are discriminatory. Time cost: 6.172184944152832 s.
+
+
+--- ROUND 2 ---
+ADF: In 316 search iterations 232 non-duplicate instances are explored 72 of which are discriminatory. Time cost: 9.109018087387085 s.
+EIDIG-5: In 342 search iterations 239 non-duplicate instances are explored 79 of which are discriminatory. Time cost: 6.053056478500366 s.
+MAFT-5: In 286 search iterations 225 non-duplicate instances are explored 55 of which are discriminatory. Time cost: 5.980633020401001 s.
+
+
+--- ROUND 3 ---
+ADF: In 279 search iterations 207 non-duplicate instances are explored 27 of which are discriminatory. Time cost: 8.50218391418457 s.
+EIDIG-5: In 304 search iterations 234 non-duplicate instances are explored 52 of which are discriminatory. Time cost: 6.3748695850372314 s.
+MAFT-5: In 338 search iterations 245 non-duplicate instances are explored 67 of which are discriminatory. Time cost: 6.568194627761841 s.
+
+
+Results of complete comparison on G-g with g_num set to 20 and l_num set to 20 ,averaged on 3 rounds:
+ADF : 43.0 individual discriminatory instances are generated at a speed of 5.375 per second.
+EIDIG-5 : 63.0 individual discriminatory instances are generated at a speed of 10.5 per second.
+MAFT-5 : 59.666666666666664 individual discriminatory instances are generated at a speed of 10.529411764705882 per second.
+
+ G-a :
+
+--- ROUND 1 ---
+ADF: In 401 search iterations 299 non-duplicate instances are explored 140 of which are discriminatory. Time cost: 11.526411056518555 s.
+EIDIG-5: In 478 search iterations 292 non-duplicate instances are explored 181 of which are discriminatory. Time cost: 7.078327894210815 s.
+MAFT-5: In 447 search iterations 293 non-duplicate instances are explored 176 of which are discriminatory. Time cost: 6.554086208343506 s.
+
+
+--- ROUND 2 ---
+ADF: In 373 search iterations 245 non-duplicate instances are explored 156 of which are discriminatory. Time cost: 10.185590744018555 s.
+EIDIG-5: In 420 search iterations 264 non-duplicate instances are explored 189 of which are discriminatory. Time cost: 5.454636573791504 s.
+MAFT-5: In 438 search iterations 265 non-duplicate instances are explored 201 of which are discriminatory. Time cost: 5.420181035995483 s.
+
+
+--- ROUND 3 ---
+ADF: In 398 search iterations 241 non-duplicate instances are explored 153 of which are discriminatory. Time cost: 10.921598434448242 s.
+EIDIG-5: In 437 search iterations 245 non-duplicate instances are explored 157 of which are discriminatory. Time cost: 6.0133020877838135 s.
+MAFT-5: In 462 search iterations 282 non-duplicate instances are explored 204 of which are discriminatory. Time cost: 6.320683717727661 s.
+
+
+Results of complete comparison on G-a with g_num set to 20 and l_num set to 20 ,averaged on 3 rounds:
+ADF : 149.66666666666666 individual discriminatory instances are generated at a speed of 14.483870967741936 per second.
+EIDIG-5 : 175.66666666666666 individual discriminatory instances are generated at a speed of 29.27777777777778 per second.
+MAFT-5 : 193.66666666666666 individual discriminatory instances are generated at a speed of 34.1764705882353 per second.
+
+ G-g&a :
+
+--- ROUND 1 ---
+ADF: In 466 search iterations 286 non-duplicate instances are explored 200 of which are discriminatory. Time cost: 25.249574184417725 s.
+EIDIG-5: In 459 search iterations 274 non-duplicate instances are explored 188 of which are discriminatory. Time cost: 12.850308179855347 s.
+MAFT-5: In 482 search iterations 277 non-duplicate instances are explored 195 of which are discriminatory. Time cost: 13.244599103927612 s.
+
+
+--- ROUND 2 ---
+ADF: In 465 search iterations 282 non-duplicate instances are explored 198 of which are discriminatory. Time cost: 25.548999071121216 s.
+EIDIG-5: In 481 search iterations 305 non-duplicate instances are explored 243 of which are discriminatory. Time cost: 11.572035789489746 s.
+MAFT-5: In 476 search iterations 282 non-duplicate instances are explored 231 of which are discriminatory. Time cost: 11.929072141647339 s.
+
+
+--- ROUND 3 ---
+ADF: In 401 search iterations 257 non-duplicate instances are explored 173 of which are discriminatory. Time cost: 21.923149347305298 s.
+EIDIG-5: In 436 search iterations 260 non-duplicate instances are explored 197 of which are discriminatory. Time cost: 10.67062520980835 s.
+MAFT-5: In 453 search iterations 264 non-duplicate instances are explored 206 of which are discriminatory. Time cost: 10.907953023910522 s.
+
+
+Results of complete comparison on G-g&a with g_num set to 20 and l_num set to 20 ,averaged on 3 rounds:
+ADF : 190.33333333333334 individual discriminatory instances are generated at a speed of 8.04225352112676 per second.
+EIDIG-5 : 209.33333333333334 individual discriminatory instances are generated at a speed of 19.03030303030303 per second.
+MAFT-5 : 210.66666666666666 individual discriminatory instances are generated at a speed of 18.58823529411765 per second.
+
+B-a:
+
+--- ROUND 1 ---
+ADF: In 431 search iterations 277 non-duplicate instances are explored 177 of which are discriminatory. Time cost: 11.430468082427979 s.
+EIDIG-5: In 418 search iterations 291 non-duplicate instances are explored 182 of which are discriminatory. Time cost: 5.234130620956421 s.
+MAFT-5: In 448 search iterations 280 non-duplicate instances are explored 191 of which are discriminatory. Time cost: 5.590083599090576 s.
+
+
+--- ROUND 2 ---
+ADF: In 402 search iterations 275 non-duplicate instances are explored 154 of which are discriminatory. Time cost: 10.853622198104858 s.
+EIDIG-5: In 428 search iterations 255 non-duplicate instances are explored 172 of which are discriminatory. Time cost: 5.205646991729736 s.
+MAFT-5: In 411 search iterations 254 non-duplicate instances are explored 164 of which are discriminatory. Time cost: 5.407160758972168 s.
+
+
+--- ROUND 3 ---
+ADF: In 451 search iterations 302 non-duplicate instances are explored 220 of which are discriminatory. Time cost: 12.07079792022705 s.
+EIDIG-5: In 447 search iterations 283 non-duplicate instances are explored 206 of which are discriminatory. Time cost: 5.02930760383606 s.
+MAFT-5: In 447 search iterations 293 non-duplicate instances are explored 217 of which are discriminatory. Time cost: 5.320159196853638 s.
+
+
+Results of complete comparison on B-a with g_num set to 20 and l_num set to 20 ,averaged on 3 rounds:
+ADF : 183.66666666666666 individual discriminatory instances are generated at a speed of 16.696969696969695 per second.
+EIDIG-5 : 186.66666666666666 individual discriminatory instances are generated at a speed of 37.333333333333336 per second.
+MAFT-5 : 190.66666666666666 individual discriminatory instances are generated at a speed of 38.13333333333333 per second.
