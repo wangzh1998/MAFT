@@ -69,6 +69,7 @@ with open(dir + iter + 'complete_comparison_info.pkl', 'rb') as f:
 画图
 '''
 import pandas as pd
+import numpy as np
 
 df = pd.DataFrame(columns=['benchmark', 'method', 'avg_num', 'avg_speed'])
 
@@ -87,17 +88,25 @@ fig, axs = plt.subplots(2)
 # num图
 for method in df['method'].unique():
     df_method = df[df['method'] == method]
-    axs[0].plot(df_method['benchmark'], df_method['avg_num'], marker='o', label=method)
+    # axs[0].plot(df_method['benchmark'], df_method['avg_num'], marker='o', label=method)
+    log_avg_num = np.log10(df_method['avg_num'])  # 使用numpy的log10函数计算以10为底的对数
+    axs[0].plot(df_method['benchmark'], log_avg_num, marker='o', label=method)
 
-axs[0].set_title('Avg Num')
+axs[0].set_title('Log Avg Num (base 10)')
+axs[0].set_xlabel('Benchmark')  # 设置x轴标签
+axs[0].set_ylabel('Log Avg Num (base 10)')  # 设置y轴标签
 axs[0].legend()
 
 # speed图
 for method in df['method'].unique():
     df_method = df[df['method'] == method]
-    axs[1].plot(df_method['benchmark'], df_method['avg_speed'], marker='o', label=method)
+    # axs[1].plot(df_method['benchmark'], df_method['avg_speed'], marker='o', label=method)
+    log_avg_speed = np.log2(df_method['avg_speed'])  # 使用numpy的log2函数计算以2为底的对数
+    axs[1].plot(df_method['benchmark'], log_avg_speed, marker='o', label=method)
 
-axs[1].set_title('Avg Speed')
+axs[1].set_title('Log Avg Speed (base 2)')
+axs[1].set_xlabel('Benchmark')  # 设置x轴标签
+axs[1].set_ylabel('Log Avg Speed (base 2)')  # 设置y轴标签
 axs[1].legend()
 
 plt.tight_layout()
