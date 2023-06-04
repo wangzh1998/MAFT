@@ -132,5 +132,5 @@ axs[2].set_title('Avg Iter')
 axs[2].legend()
 
 plt.tight_layout()
-plt.savefig(dir + iter + 'complete_comparison_result.png')
+plt.savefig(dir + iter + 'hyper_comparison_result.png')
 plt.show()
