@@ -12,6 +12,7 @@ import time
 import ADF
 import EIDIG
 import MAFT
+import Gradient
 
 # todo 封装成函数
 # allocate GPU and set dynamic memory growth
@@ -27,6 +28,40 @@ np.random.seed(42)
 tf.random.set_seed(42)
 
 # arr = np.logspace(-10, 1, num=12, base=10.0) # 创建1e-10到10的12个数的等比数列
+
+def gradient_comparison(benchmark, X, model, g_num=1000, perturbation_size=1e-4, l_num=1000, decay=0.5, c_num=4, max_iter=10, s_g=1.0, s_l=1.0, epsilon_l=1e-6, fashion='RoundRobin'):
+    # compare different perturbation_size in terms of effectiveness and efficiency of MAFT
+
+    print('--- START ', '---')
+    if g_num >= len(X):
+        seeds = X.copy()
+    else:
+        clustered_data = generation_utilities.clustering(X, c_num)
+        seeds = np.empty(shape=(0, len(X[0])))
+        for i in range(g_num):
+            new_seed = generation_utilities.get_seed(clustered_data, len(X), c_num, i % c_num, fashion=fashion)
+            seeds = np.append(seeds, [new_seed], axis=0)
+
+    # EIDIG
+    t1 = time.time()
+    eidig_gradients = Gradient.eidig_gradient_generation(seeds, len(X[0]), model)
+    # np.save('logging_data/gradients_comparison/' + benchmark + '_EIDIG_gradient' + '.npy', eidig_gradients)
+    t2 = time.time()
+    eidig_time_cost = t2 - t1
+    print('EIDIG-5:', 'Generate gradients of ', len(seeds), ' seeds on benchmark ', benchmark, '. Time cost:',
+          t2 - t1, 's.')
+
+    # MAFT
+    t1 = time.time()
+    maft_gradients = Gradient.maft_gradient_generation(seeds, len(X[0]), model, perturbation_size)
+    # np.save('logging_data/gradients_comparison/' + benchmark + '_MAFT_gradient' + '.npy', maft_gradients)
+    t2 = time.time()
+    maft_time_cost = t2 - t1
+    print('MAFT-5:', 'Generate gradients of ', len(seeds), ' seeds on benchmark ', benchmark, '. Time cost:',
+          t2 - t1, 's.')
+
+    print('--- END ', '---')
+    return eidig_gradients, maft_gradients, eidig_time_cost, maft_time_cost
 
 def hyper_comparison(num_experiment_round, benchmark, X, protected_attribs, constraint, model, perturbation_size_list, g_num=1000, l_num=1000, decay=0.5, c_num=4, max_iter=10, s_g=1.0, s_l=1.0, epsilon_l=1e-6, fashion='RoundRobin'):
     # compare different perturbation_size in terms of effectiveness and efficiency of MAFT
