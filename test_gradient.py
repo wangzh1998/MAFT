@@ -103,6 +103,10 @@ for i in range(len(benchmark_names)):
     # 初始化列表来保存当前benchmark的所有实例的相似度
     sims = []
 
+    # 如果实际设置的g_num大于当前benchmark的实例数，则将g_num设置为当前benchmark的实例数（有一个数据集只有600条数据）
+    if g_num >= len(eidig_grad):
+        g_num = len(eidig_grad)
+
     # 遍历所有的实例
     for j in range(g_num):
         # 计算当前实例的EIDIG梯度和MAFT梯度之间的cosine相似度
