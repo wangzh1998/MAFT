@@ -11,6 +11,16 @@ import itertools
 import time
 import generation_utilities
 
+def compute_grad_adf(x, model, loss_func=keras.losses.binary_crossentropy):
+    # compute the gradient of loss w.r.t input attributes
+
+    x = tf.constant([x], dtype=tf.float32)
+    y_pred = tf.cast(model(x) > 0.5, dtype=tf.float32)
+    with tf.GradientTape() as tape:
+        tape.watch(x)
+        loss = loss_func(y_pred, model(x))
+    gradient = tape.gradient(loss, x)
+    return gradient[0].numpy()
 
 def compute_grad_eidig(x, model):
     # compute the gradient of model perdictions w.r.t input attributes
@@ -43,7 +53,16 @@ def compute_grad_maft(x, model, perturbation_size=1e-4):
     return gradient[0].numpy() if model(x) > 0.5 else -gradient[0].numpy()
 
 # 对seeds的真实梯度和模拟梯度进行对比
-# 以下两个方法的seeds需要是一样的
+# 三个方法取的种子应该是一样的，这样才方便进行后续对比
+
+def adf_gradient_generation(seeds, num_attribs, model):
+    g_num = len(seeds)
+    adf_gradients = np.empty(shape=(0, num_attribs))
+    for i in range(g_num):
+        x1 = seeds[i]
+        real_grad = compute_grad_adf(x1, model)
+        adf_gradients = np.append(adf_gradients, [real_grad], axis=0)
+    return adf_gradients
 
 # def gradient_generation(X, seeds, num_attribs, protected_attribs, constraint, model, decay, max_iter, s_g):
 def eidig_gradient_generation(seeds, num_attribs, model):

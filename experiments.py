@@ -42,6 +42,15 @@ def gradient_comparison(benchmark, X, model, g_num=1000, perturbation_size=1e-4,
             new_seed = generation_utilities.get_seed(clustered_data, len(X), c_num, i % c_num, fashion=fashion)
             seeds = np.append(seeds, [new_seed], axis=0)
 
+    # ADF
+    t1 = time.time()
+    adf_gradients = Gradient.adf_gradient_generation(seeds, len(X[0]), model)
+    # np.save('logging_data/gradients_comparison/' + benchmark + '_ADF_gradient' + '.npy', adf_gradients)
+    t2 = time.time()
+    adf_time_cost = t2 - t1
+    print('ADF:', 'Generate gradients of ', len(seeds), ' seeds on benchmark ', benchmark, '. Time cost:', t2 - t1,
+            's.')
+
     # EIDIG
     t1 = time.time()
     eidig_gradients = Gradient.eidig_gradient_generation(seeds, len(X[0]), model)
@@ -61,7 +70,7 @@ def gradient_comparison(benchmark, X, model, g_num=1000, perturbation_size=1e-4,
           t2 - t1, 's.')
 
     print('--- END ', '---')
-    return eidig_gradients, maft_gradients, eidig_time_cost, maft_time_cost
+    return adf_gradients, eidig_gradients, maft_gradients, adf_time_cost, eidig_time_cost, maft_time_cost
 
 def hyper_comparison(num_experiment_round, benchmark, X, protected_attribs, constraint, model, perturbation_size_list, g_num=1000, l_num=1000, decay=0.5, c_num=4, max_iter=10, s_g=1.0, s_l=1.0, epsilon_l=1e-6, fashion='RoundRobin'):
     # compare different perturbation_size in terms of effectiveness and efficiency of MAFT
