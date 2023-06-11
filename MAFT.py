@@ -333,3 +333,28 @@ def global_direction_comparison(X, seeds, num_attribs, protected_attribs, constr
     # g_id = np.array(list(set([tuple(id) for id in g_id])))
     # return g_id, all_gen_g, try_times
     return directions
+
+'''
+根据梯度计算局部生成阶段的归一化probability信息
+1. 原本输入的g_id改为随机采集的seeds（同global phase）,方便做实验
+不同的是，g_id中的x1一定能通过find_pair找到歧视实例对x2,但是seeds不一样，所以我们这里只用max_diff找最有可能的歧视实例对x2
+'''
+# def local_generation(num_attribs, l_num, g_id, protected_attribs, constraint, model, update_interval, s_l, epsilon):
+def local_probability_comparision(seeds, num_attribs, protected_attribs, constraint, model, epsilon, perturbation_size):
+    # local generation phase of EIDIG
+
+    # direction = [-1, 1]
+    # l_id = np.empty(shape=(0, num_attribs))
+    # all_gen_l = np.empty(shape=(0, num_attribs))
+    # try_times = 0
+    probabilities = np.empty(shape=(0, num_attribs))
+    # for x1 in g_id:
+    for x1 in seeds:
+        # x0 = x1.copy()
+        similar_x1 = generation_utilities.similar_set(x1, num_attribs, protected_attribs, constraint)
+        x2 = generation_utilities.max_diff(x1, similar_x1, model)
+        grad1 = compute_grad(x1, model, perturbation_size)
+        grad2 = compute_grad(x2, model, perturbation_size)
+        p = generation_utilities.normalization(grad1, grad2, protected_attribs, epsilon)
+        probabilities = np.append(probabilities, [p], axis=0)
+    return probabilities
