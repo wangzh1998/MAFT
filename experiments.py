@@ -72,6 +72,53 @@ def gradient_comparison(benchmark, X, model, g_num=1000, perturbation_size=1e-4,
     print('--- END ', '---')
     return adf_gradients, eidig_gradients, maft_gradients, adf_time_cost, eidig_time_cost, maft_time_cost
 
+def gradient_comparison_global_direction(benchmark, X, protected_attribs, constraint, model, g_num=1000, perturbation_size=1e-4, l_num=1000, decay=0.5, c_num=4, max_iter=10, s_g=1.0, s_l=1.0, epsilon_l=1e-6, fashion='RoundRobin'):
+    # compare global direction direction
+
+    print('--- START ', '---')
+    if g_num >= len(X):
+        seeds = X.copy()
+    else:
+        clustered_data = generation_utilities.clustering(X, c_num)
+        seeds = np.empty(shape=(0, len(X[0])))
+        for i in range(g_num):
+            new_seed = generation_utilities.get_seed(clustered_data, len(X), c_num, i % c_num, fashion=fashion)
+            seeds = np.append(seeds, [new_seed], axis=0)
+
+    num_attribs = len(X[0])
+
+    # ADF
+    # t1 = time.time()
+    # adf_directions = Gradient.adf_gradient_generation(seeds, len(X[0]), model)
+    # # np.save('logging_data/directions_comparison/' + benchmark + '_ADF_gradient' + '.npy', adf_directions)
+    # t2 = time.time()
+    # adf_time_cost = t2 - t1
+    # print('ADF:', 'Generate', len(adf_directions), 'directions of ', len(seeds), ' seeds on benchmark ', benchmark, '. Time cost:', t2 - t1,
+    #       's.')
+
+    # EIDIG
+    t1 = time.time()
+    # eidig_directions = Gradient.eidig_gradient_generation(seeds, len(X[0]), model)
+    eidig_directions = EIDIG.global_direction_comparison(X, seeds, num_attribs, protected_attribs, constraint, model, decay)
+    # np.save('logging_data/directions_comparison/' + benchmark + '_EIDIG_gradient' + '.npy', eidig_directions)
+    t2 = time.time()
+    eidig_time_cost = t2 - t1
+    print('EIDIG-5:', 'Generate', len(eidig_directions), 'directions of ', len(seeds), ' seeds on benchmark ', benchmark, '. Time cost:',
+          t2 - t1, 's.')
+
+    # MAFT
+    t1 = time.time()
+    # maft_directions = Gradient.maft_gradient_generation(seeds, len(X[0]), model, perturbation_size)
+    maft_directions = MAFT.global_direction_comparison(X, seeds, num_attribs, protected_attribs, constraint, model, decay, perturbation_size)
+    # np.save('logging_data/directions_comparison/' + benchmark + '_MAFT_gradient' + '.npy', maft_directions)
+    t2 = time.time()
+    maft_time_cost = t2 - t1
+    print('MAFT-5:', 'Generate', len(maft_directions), 'directions of ', len(seeds), ' seeds on benchmark ', benchmark, '. Time cost:',
+          t2 - t1, 's.')
+
+    print('--- END ', '---')
+    return eidig_directions, maft_directions, eidig_time_cost, maft_time_cost
+
 def hyper_comparison(num_experiment_round, benchmark, X, protected_attribs, constraint, model, perturbation_size_list, g_num=1000, l_num=1000, decay=0.5, c_num=4, max_iter=10, s_g=1.0, s_l=1.0, epsilon_l=1e-6, fashion='RoundRobin'):
     # compare different perturbation_size in terms of effectiveness and efficiency of MAFT
 

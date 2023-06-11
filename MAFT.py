@@ -287,3 +287,49 @@ def time_record(X, seeds, protected_attribs, constraint, model, decay, l_num, re
                     p = p0.copy()
                     suc_iter = 0
     return t
+
+'''
+根据梯度计算全局生成阶段的direction信息
+1. 令max_iter=1，只进行一次迭代 目的是：我们只比较用于指导全局生成的第一次的direction信息的一致性
+   如果在多轮迭代中对比，原始输入的direction信息可能会被后续的迭代所改变。所以不太准确。
+2. 假设给的是1000个seeds，由于可能有些seed已经是discriminatory的（这时候它不需要再扰动，也不再需要direction信息），所以实际上只有一部分seed会被用于全局direction生成。
+即返回的directions的数量小于等于seeds数。
+'''
+# def global_direction_comparison(X, seeds, num_attribs, protected_attribs, constraint, model, decay, max_iter, s_g):
+def global_direction_comparison(X, seeds, num_attribs, protected_attribs, constraint, model, decay, perturbation_size):
+
+    # Modify global generation phase of EIDIG to compare the direction of gradient(except discriminate seed)
+
+    # g_id = np.empty(shape=(0, num_attribs))
+    # all_gen_g = np.empty(shape=(0, num_attribs))
+    # try_times = 0
+    directions = np.empty(shape=(0, num_attribs))
+    max_iter = 1 # 令max_iter=1，只进行一次迭代 原因：我们只比较用于指导全局生成的第一次的direction信息的一致性
+    g_num = len(seeds)
+    for i in range(g_num):
+        x1 = seeds[i].copy()
+        grad1 = np.zeros_like(X[0]).astype(float)
+        grad2 = np.zeros_like(X[0]).astype(float)
+        for _ in range(max_iter):
+            # try_times += 1
+            similar_x1 = generation_utilities.similar_set(x1, num_attribs, protected_attribs, constraint)
+            if generation_utilities.is_discriminatory(x1, similar_x1, model):
+                # g_id = np.append(g_id, [x1], axis=0)
+                break
+            x2 = generation_utilities.max_diff(x1, similar_x1, model)
+            # change 2 use momentum to boost global generation
+            grad1 = decay * grad1 + compute_grad(x1, model, perturbation_size)
+            grad2 = decay * grad2 + compute_grad(x2, model, perturbation_size)
+            direction = np.zeros_like(X[0])
+            sign_grad1 = np.sign(grad1)
+            sign_grad2 = np.sign(grad2)
+            for attrib in range(num_attribs):
+                if attrib not in protected_attribs and sign_grad1[attrib] == sign_grad2[attrib]:
+                    direction[attrib] = (-1) * sign_grad1[attrib]
+            directions = np.append(directions, [direction], axis=0)
+            # x1 = x1 + s_g * direction
+            # x1 = generation_utilities.clip(x1, constraint)
+            # all_gen_g = np.append(all_gen_g, [x1], axis=0)
+    # g_id = np.array(list(set([tuple(id) for id in g_id])))
+    # return g_id, all_gen_g, try_times
+    return directions
