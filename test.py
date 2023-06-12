@@ -27,9 +27,9 @@ experiments_data = []
 
 # test the implementation of ADF, EIDIG-5, EIDIG-INF
 # the individual discriminatory instances generated are saved to 'logging_data/logging_data_from_tests/complete_comparison'
-ROUND = 3 # the number of experiment rounds
-g_num = 100 # the number of seeds used in the global generation phase
-l_num = 100 # the maximum search iteration in the local generation phase
+ROUND = 1 # the number of experiment rounds
+g_num = 1000 # the number of seeds used in the global generation phase
+l_num = 1000 # the maximum search iteration in the local generation phase
 perturbation_size = 1 # the perturbation size used in the compute_gradient function
 for benchmark, protected_attribs in [('C-a', [0]), ('C-r', [6]), ('C-g', [7]), ('C-a&r', [0,6]), ('C-a&g', [0,7]), ('C-r&g', [6,7])]:
     print('\n', benchmark, ':\n')
