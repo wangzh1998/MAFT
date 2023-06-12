@@ -70,7 +70,8 @@ sum_num_iter += num_iter
 sum_time_cost += time_cost
 
 avg_num_ids = sum_num_ids / ROUND
-avg_iter = sum_num_iter / ROUND / (7*(g_num * l_num)+3*(g_num * l_num))
+# avg_iter = sum_num_iter / ROUND / (7*(g_num * l_num)+3*(g_num * l_num))
+avg_iter = sum_num_iter / ROUND / (7*l_num + 3*l_num)
 avg_speed = sum_num_ids / sum_time_cost
 
 print('Results of global phase comparsion, averaged on', ROUND, 'rounds:')
