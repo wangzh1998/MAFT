@@ -29,7 +29,7 @@ bank_model = keras.models.load_model("models/original_models/bank_model.h5")
 
 # test the implementation of ADF, EIDIG-5, EIDIG-INF
 # the individual discriminatory instances generated are saved to 'logging_data/logging_data_from_tests/complete_comparison'
-g_num = 10 # the number of seeds used in the global generation phase
+g_num = 1000 # the number of seeds used in the global generation phase
 # todo 是否需要改成1e-4
 perturbation_size = 1 # the perturbation size used in the compute_gradient function
 # results of experiments to save
