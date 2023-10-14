@@ -14,7 +14,6 @@ import EIDIG
 import MAFT
 import Gradient
 
-# todo 封装成函数
 # allocate GPU and set dynamic memory growth
 os.environ['CUDA_VISIBLE_DEVICES'] = '0'
 gpus = tf.config.experimental.list_physical_devices(device_type='GPU')
@@ -69,8 +68,17 @@ def gradient_comparison(benchmark, X, model, g_num=1000, perturbation_size=1e-4,
     print('MAFT-5:', 'Generate gradients of ', len(seeds), ' seeds on benchmark ', benchmark, '. Time cost:',
           t2 - t1, 's.')
 
+    # MAFT non-vectorized
+    t1 = time.time()
+    maft_gradients_non_vec = Gradient.maft_gradient_generation_non_vec(seeds, len(X[0]), model, perturbation_size)
+    # np.save('logging_data/gradients_comparison/' + benchmark + '_MAFT_gradient' + '.npy', maft_gradients)
+    t2 = time.time()
+    maft_time_cost_non_vec = t2 - t1
+    print('MAFT-5-non-vec:', 'Generate gradients of ', len(seeds), ' seeds on benchmark ', benchmark, '. Time cost:',
+          t2 - t1, 's.')
+
     print('--- END ', '---')
-    return adf_gradients, eidig_gradients, maft_gradients, adf_time_cost, eidig_time_cost, maft_time_cost
+    return adf_gradients, eidig_gradients, maft_gradients, maft_gradients_non_vec, adf_time_cost, eidig_time_cost, maft_time_cost, maft_time_cost_non_vec
 
 def gradient_comparison_global_direction(benchmark, X, protected_attribs, constraint, model, g_num=1000, perturbation_size=1e-4, l_num=1000, decay=0.5, c_num=4, max_iter=10, s_g=1.0, s_l=1.0, epsilon_l=1e-6, fashion='RoundRobin'):
     # compare global direction direction

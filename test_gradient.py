@@ -48,10 +48,10 @@ for benchmark, protected_attribs in benchmarks_list:
         data = pre_census_income.X_train
         model = adult_model
 
-    adf_gradients, eidig_gradients, maft_gradients, adf_time_cost, eidig_time_cost, maft_time_cost = experiments.gradient_comparison(benchmark, data,
+    adf_gradients, eidig_gradients, maft_gradients, maft_gradients_non_vec, adf_time_cost, eidig_time_cost, maft_time_cost, maft_time_cost_non_vec = experiments.gradient_comparison(benchmark, data,
                                                                                                        model, g_num,
                                                                                                        perturbation_size)
-    result = [benchmark, adf_gradients, eidig_gradients, maft_gradients, adf_time_cost, eidig_time_cost, maft_time_cost]
+    result = [benchmark, adf_gradients, eidig_gradients, maft_gradients, maft_gradients_non_vec, adf_time_cost, eidig_time_cost, maft_time_cost, maft_time_cost_non_vec]
     results.append(result)
 
 # Convert list to ndarray
@@ -88,6 +88,7 @@ benchmark_names = results[:, 0]
 adf_grads = results[:, 1] # 下面的画图只算eidig和maft的相似度，不算adf的
 eidig_grads = results[:, 2]
 maft_grads = results[:, 3]
+maft_grads_non_vec = results[:, 4]
 
 # 初始化列表来保存每个benchmark的所有实例的相似度
 all_sims = []
@@ -98,8 +99,10 @@ avg_sims = []
 # 遍历所有的benchmarks
 for i in range(len(benchmark_names)):
     # 提取出当前benchmark的EIDIG梯度和MAFT梯度
-    eidig_grad = eidig_grads[i]
-    maft_grad = maft_grads[i]
+    # eidig_grad = eidig_grads[i]
+    # maft_grad = maft_grads[i]
+    eidig_grad = maft_grads[i]
+    maft_grad = maft_grads_non_vec[i]
 
     # 初始化列表来保存当前benchmark的所有实例的相似度
     sims = []
@@ -171,18 +174,20 @@ plt.show()
 
 # 画时间对比直方图
 # 提取EIDIG和MAFT的时间开销
-adf_time_cost = results[:, 4]
-eidig_time = results[:, 5]
-maft_time = results[:, 6]
+adf_time_cost = results[:, 5]
+eidig_time = results[:, 6]
+maft_time = results[:, 7]
+maft_time_cost_non_vec = results[:, 8]
 
 x = np.arange(len(benchmark_names))  # 设定x轴坐标
 
 plt.figure(figsize=(15, 10))
 
 # 使用条形图可视化ADF、EIDIG和MAFT的时间开销
-plt.bar(x - 0.3, adf_time_cost, 0.3, label='ADF')
-plt.bar(x, eidig_time, 0.3, label='EIDIG')
-plt.bar(x + 0.3, maft_time, 0.3, label='MAFT')
+plt.bar(x - 0.3, adf_time_cost, 0.2, label='ADF')
+plt.bar(x - 0.1, eidig_time, 0.2, label='EIDIG')
+plt.bar(x + 0.1, maft_time, 0.2, label='MAFT')
+plt.bar(x + 0.3, maft_time_cost_non_vec, 0.2, label='MAFT_non_vec')
 
 # 设置x轴的标签为benchmark的名字
 plt.xticks(x, benchmark_names)

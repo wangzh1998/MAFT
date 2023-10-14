@@ -52,6 +52,25 @@ def compute_grad_maft(x, model, perturbation_size=1e-4):
     gradient = tf.reshape(gradient, [1, -1])
     return gradient[0].numpy() if model(x) > 0.5 else -gradient[0].numpy()
 
+def compute_grad_maft_non_vectorized(x, model, perturbation_size=1e-4):
+    h = perturbation_size
+    n = len(x)
+    y_pred = model(tf.constant([x], dtype=tf.float32))
+    gradient = np.empty(n)
+    for i in range(n):
+        # 扰动第i个属性
+        x_perturbed = np.copy(x)
+        x_perturbed[i] += h
+        # 计算模型在扰动后的输出
+        x_perturbed = tf.constant([x_perturbed], dtype=tf.float32)
+        y_perturbed = model(x_perturbed)
+
+        # 计算梯度
+        gradient[i] = (y_perturbed - y_pred) / h
+
+    return gradient if model(tf.constant([x])) > 0.5 else -gradient
+
+
 # 对seeds的真实梯度和模拟梯度进行对比
 # 三个方法取的种子应该是一样的，这样才方便进行后续对比
 
@@ -84,3 +103,13 @@ def maft_gradient_generation(seeds, num_attribs, model, perturbation_size=1e-4):
         estimated_grad = compute_grad_maft(x1, model, perturbation_size)
         maft_gradients = np.append(maft_gradients, [estimated_grad], axis=0)
     return maft_gradients
+
+def maft_gradient_generation_non_vec(seeds, num_attribs, model, perturbation_size=1e-4):
+
+    g_num = len(seeds)
+    maft_gradients_non_vec = np.empty(shape=(0, num_attribs))
+    for i in range(g_num):
+        x1 = seeds[i]
+        estimated_grad = compute_grad_maft_non_vectorized(x1, model, perturbation_size)
+        maft_gradients_non_vec = np.append(maft_gradients_non_vec, [estimated_grad], axis=0)
+    return maft_gradients_non_vec
