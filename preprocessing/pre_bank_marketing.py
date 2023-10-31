@@ -8,6 +8,7 @@ import pandas as pd
 import tensorflow as tf
 from tensorflow import keras
 from sklearn.model_selection import train_test_split
+import os
 
 """
     https://archive.ics.uci.edu/ml/datasets/bank+marketing
@@ -28,7 +29,10 @@ def set_table(vocab):
 
 
 # load bank dataset
-data_path = ('datasets/bank-full.csv')
+absolute_dir_path = os.path.dirname(os.path.abspath(__file__))
+last_dir = os.path.dirname(absolute_dir_path)
+data_path = os.path.join(last_dir, 'datasets', 'bank-full.csv')
+# data_path = ('datasets/bank-full.csv')
 df = pd.read_csv(data_path, sep=";", encoding='latin-1')
 
 

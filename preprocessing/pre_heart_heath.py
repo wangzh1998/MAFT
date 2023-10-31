@@ -1,13 +1,19 @@
 import numpy as np
 import sys
 from sklearn.model_selection import train_test_split
-sys.path.append("../")
+import os
+
+# sys.path.append("../")
 
 X = []
 y = []
 i = 0
 
-with open("datasets/heart_disease", "r") as ins:
+absolute_dir_path = os.path.dirname(os.path.abspath(__file__))
+last_dir = os.path.dirname(absolute_dir_path)
+data_path = os.path.join(last_dir, 'datasets', 'heart_disease')
+# with open("datasets/heart_disease", "r") as ins:
+with open(data_path, "r") as ins:
     for line in ins:
         line = line.strip()
         line1 = line.split(',')

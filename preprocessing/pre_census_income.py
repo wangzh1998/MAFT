@@ -8,6 +8,7 @@ import pandas as pd
 import tensorflow as tf
 from tensorflow import keras
 from sklearn.model_selection import train_test_split
+import os
 
 """
     https://www.kaggle.com/vivamoto/us-adult-income-update?select=census.csv
@@ -28,7 +29,10 @@ def set_table(vocab):
 
 
 # load adult dataset, and eliminate unneccessary features
-data_path = ('datasets/adult.csv')
+absolute_dir_path = os.path.dirname(os.path.abspath(__file__))
+last_dir = os.path.dirname(absolute_dir_path)
+data_path = os.path.join(last_dir, 'datasets', 'adult.csv')
+# data_path = ('datasets/adult.csv')
 df = pd.read_csv(data_path, encoding='latin-1')
 df = df.drop(['fnlwgt', 'education'], axis=1)
 

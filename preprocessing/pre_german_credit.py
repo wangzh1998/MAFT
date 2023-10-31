@@ -7,6 +7,7 @@ import numpy as np
 import pandas as pd
 import tensorflow as tf
 from sklearn.model_selection import train_test_split
+import os
 
 """
     https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/Q8MAW8
@@ -18,7 +19,10 @@ tf.random.set_seed(42)
 
 
 # load german credit risk dataset
-data_path = ('datasets/proc_german_num_02 withheader-2.csv')
+absolute_dir_path = os.path.dirname(os.path.abspath(__file__))
+last_dir = os.path.dirname(absolute_dir_path)
+data_path = os.path.join(last_dir, 'datasets', 'proc_german_num_02 withheader-2.csv')
+# data_path = ('datasets/proc_german_num_02 withheader-2.csv')
 df = pd.read_csv(data_path)
 
 
