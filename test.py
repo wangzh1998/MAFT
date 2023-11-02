@@ -86,7 +86,7 @@ progress_data = {
 }
 progress_data['data'] = [item for item in progress_data['data'] if item['benchmark'] is not None]
 
-# the individual discriminatory instances generated are saved to 'logging_data/logging_data_from_tests/complete_comparison'
+# the individual discriminatory instances generated are saved to 'logging_data/logging_data_from_tests/complete_comparison_instances'
 iter = '{}x{}_H_{}'.format(g_num, l_num, perturbation_size)
 dir = 'logging_data/logging_data_from_tests/complete_comparison_info/' + iter + '/'
 filename = 'progress_data.json'

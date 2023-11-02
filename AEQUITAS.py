@@ -1,6 +1,5 @@
 """
-This python file reproduces ADF, the state-of-the-art individual discrimination generation algorithm.
-The official implementation can be accessed at https://github.com/pxzhang94/ADF.
+This python file implement AEQUITAS.
 """
 import random
 
