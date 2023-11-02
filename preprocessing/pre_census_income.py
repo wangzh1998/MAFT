@@ -9,6 +9,11 @@ import tensorflow as tf
 from tensorflow import keras
 from sklearn.model_selection import train_test_split
 import os
+import sys
+current_dir = os.path.dirname(os.path.abspath(__file__))
+if current_dir not in sys.path:
+    sys.path.append(current_dir)
+import preprocess_utilities
 
 """
     https://www.kaggle.com/vivamoto/us-adult-income-update?select=census.csv
@@ -109,3 +114,17 @@ constraint = np.vstack((X.min(axis=0), X.max(axis=0))).T
 
 # for census income data, age(0), race(6) and gender(7) are protected attributes in 12 features
 protected_attribs = [0, 6, 7]
+
+# intial_input for AEQUITAS
+# ADF中默认采用的initial_input = [7, 4, 1, 4, 4, 0, 0, 0, 1, 5, 73, 1]
+initial_input = preprocess_utilities.generate_instance(constraint)
+# print("Generated instance:", initial_input)
+
+# for SG
+configurations = {
+    'num_attributes': len(X[0]),
+    'feature_name': df.columns[:-1].tolist(),
+    'class_name': ['output'],
+    'categorical_features': list(range(len(X[0]))),
+}
+# print(configurations)

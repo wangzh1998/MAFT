@@ -5,6 +5,12 @@ sys.path.append("../")
 from sklearn.preprocessing import LabelEncoder
 from sklearn.model_selection import train_test_split
 from aif360.datasets.meps_dataset_panel19_fy2015 import MEPSDataset19
+import os
+current_dir = os.path.dirname(os.path.abspath(__file__))
+if current_dir not in sys.path:
+    sys.path.append(current_dir)
+import preprocess_utilities
+
 cd = MEPSDataset19()
 le = LabelEncoder()
 df = pd.DataFrame(cd.features)
@@ -36,3 +42,16 @@ constraint = np.vstack((X.min(axis=0), X.max(axis=0))).T
 
 # for meps15 data, age(0), race(1) and gender(9) are protected attributes in 137 features
 # protected_attribs = [0, 1, 9]
+
+# intial_input for AEQUITAS
+initial_input = preprocess_utilities.generate_instance(constraint)
+# print("Generated instance:", initial_input)
+
+# configurations for SG
+configurations = {
+    'num_attributes': len(X[0]),
+    'feature_name': cd.feature_names,
+    'class_name': ['output'],
+    'categorical_features': list(range(len(X[0]))),
+}
+# print(configurations)

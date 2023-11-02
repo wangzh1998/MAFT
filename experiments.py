@@ -15,6 +15,7 @@ import ADF
 import EIDIG
 import MAFT
 import AEQUITAS
+import SG
 import Gradient
 
 # allocate GPU and set dynamic memory growth
@@ -38,7 +39,8 @@ class Method(Enum):
 
 class BlackboxMethod(Enum):
     AEQUITAS = 0
-    MAFT = 1
+    SG = 1
+    MAFT = 2
 
 def gradient_comparison(benchmark, X, model, g_num=1000, perturbation_size=1e-4, l_num=1000, decay=0.5, c_num=4, max_iter=10, s_g=1.0, s_l=1.0, epsilon_l=1e-6, fashion='RoundRobin'):
     # compare different perturbation_size in terms of effectiveness and efficiency of MAFT
@@ -330,7 +332,8 @@ def comparison(num_experiment_round, benchmark, X, protected_attribs, constraint
     return num_ids, time_cost
 
 # 添加了参数initial_input
-def comparison_blackbox(num_experiment_round, benchmark, X, protected_attribs, constraint, model, g_num=1000, l_num=1000, perturbation_size=1e-4, initial_input=None, decay=0.5, c_num=4, max_iter=10, s_g=1.0, s_l=1.0, epsilon_l=1e-6, fashion='RoundRobin'):
+# 为调用SG方法添加了参数dataset_configuration
+def comparison_blackbox(num_experiment_round, benchmark, X, protected_attribs, constraint, model, g_num=1000, l_num=1000, perturbation_size=1e-4, initial_input=None, dataset_configuration = {}, decay=0.5, c_num=4, max_iter=10, s_g=1.0, s_l=1.0, epsilon_l=1e-6, fashion='RoundRobin'):
     # compare MAFT with AEQUITAS in terms of effectiveness and efficiency
 
     iter = '{}x{}_H_{}'.format(g_num, l_num, perturbation_size)
@@ -338,8 +341,10 @@ def comparison_blackbox(num_experiment_round, benchmark, X, protected_attribs, c
     if not os.path.exists(dir):
         os.makedirs(dir)
 
-    num_ids = np.zeros(shape=(2, num_experiment_round), dtype=np.float64)
-    time_cost = np.zeros(shape=(2, num_experiment_round), dtype=np.float64)
+    # 获取BBMethod的方法数
+    num_methods = len(BlackboxMethod)
+    num_ids = np.zeros(shape=(num_methods, num_experiment_round), dtype=np.float64)
+    time_cost = np.zeros(shape=(num_methods, num_experiment_round), dtype=np.float64)
 
     for i in range(num_experiment_round):
         round_now = i + 1
@@ -361,6 +366,8 @@ def comparison_blackbox(num_experiment_round, benchmark, X, protected_attribs, c
                 ids, gen, total_iter = AEQUITAS.individual_discrimination_generation(X, seeds, protected_attribs, constraint,
                                                                                 model, l_num, max_iter, s_g, s_l,
                                                                                 epsilon_l, initial_input)
+            elif method == BlackboxMethod.SG:
+                ids, gen, total_iter = SG.individual_discrimination_generation(X, seeds, protected_attribs, constraint, model, dataset_configuration)
             elif method == BlackboxMethod.MAFT:
                 ids, gen, total_iter = MAFT.individual_discrimination_generation(X, seeds, protected_attribs,
                                                                                  constraint, model, decay, l_num, 5,

@@ -8,7 +8,11 @@ import pandas as pd
 import tensorflow as tf
 from sklearn.model_selection import train_test_split
 import os
-
+import sys
+current_dir = os.path.dirname(os.path.abspath(__file__))
+if current_dir not in sys.path:
+    sys.path.append(current_dir)
+import preprocess_utilities
 """
     https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/Q8MAW8
 """
@@ -50,3 +54,17 @@ constraint = np.vstack((X.min(axis=0), X.max(axis=0))).T
 
 # for german credit data, gender(6) and age(9) are protected attributes in 24 features
 protected_attribs = [6, 9]
+
+# intial_input for AEQUITAS
+# ADF中默认采用的initial_input = [1, 2, 24, 1, 60, 1, 3, 2, 2, 1, 22, 3, 2, 2, 2, 1, 0, 0, 1, 0, 0, 1, 0, 0]
+initial_input = preprocess_utilities.generate_instance(constraint)
+# print("Generated instance:", initial_input)
+
+# configurations for SG
+configurations = {
+    'num_attributes': len(X[0]),
+    'feature_name': df.columns[:-1].tolist(),
+    'class_name': ['output'],
+    'categorical_features': list(range(len(X[0]))),
+}
+# print(configurations)
