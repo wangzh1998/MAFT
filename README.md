@@ -11,6 +11,23 @@ Paper: https://dl.acm.org/doi/10.1145/3460319.3464820
 1.1 Environment
 
 Python3.6 + Tensorflow2.0 or later versions are recommended.
+
+[//]: # (conda install -c asmeurer z3)
+[//]: # (conda install -c newptcai z3-solver)
+for SG:
+
+    pip install z3-solver
+
+for meps dataset:
+
+    brew install r # install R language
+    
+    conda install -c conda-forge aif360 # install AIF360 package
+    
+    cd xx/anaconda3/envs/tf2/lib/python3.7/site-packages/aif360/data/raw/meps # find generat_data.R
+    
+    Rscript generate_data.R # generate meps dataset
+
 The following packages are also required: numpy, scikit-learn, pandas, joblib.
 
 
