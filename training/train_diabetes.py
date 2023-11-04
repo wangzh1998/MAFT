@@ -31,5 +31,5 @@ model.compile(loss="binary_crossentropy", optimizer="nadam", metrics=["accuracy"
 # model.evaluate(pre_diabetes.X_test, pre_diabetes.y_test) # 68.83% accuracy
 # model.save("../models/original_models/diabetes_model.h5")
 history = model.fit(pre_diabetes.X_train, pre_diabetes.y_train, epochs=30)
-model.evaluate(pre_diabetes.X_test, pre_diabetes.y_test) # 67.53% accuracy
+model.evaluate(pre_diabetes.X_test, pre_diabetes.y_test) # 74.03% accuracy
 model.save("../models/original_models/diabetes_model.h5")
