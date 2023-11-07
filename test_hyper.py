@@ -1,137 +1,75 @@
-"""
-This python file is used to run test experiments.
-"""
-
-
-import experiments
-from preprocessing import pre_census_income
-from preprocessing import pre_german_credit
-from preprocessing import pre_bank_marketing
-from tensorflow import keras
+import experiments as experiments
 import numpy as np
-
-
-"""
-for census income data, age(0), race(6) and gender(7) are protected attributes in 12 features
-for german credit data, gender(6) and age(9) are protected attributes in 24 features
-for bank marketing data, age(0) is protected attribute in 16 features
-"""
-
-
-# load models
-adult_model = keras.models.load_model("models/original_models/adult_model.h5")
-german_model = keras.models.load_model("models/original_models/german_model.h5")
-bank_model = keras.models.load_model("models/original_models/bank_model.h5")
-
-
-# test the implementation of ADF, EIDIG-5, EIDIG-INF
-# the individual discriminatory instances generated are saved to 'logging_data/logging_data_from_tests/complete_comparison'
-# todo 修改为100x100
-ROUND = 3 # the number of experiment rounds
-g_num = 100 # the number of seeds used in the global generation phase
-l_num = 100 # the maximum search iteration in the local generation phase
-perturbation_size_list = np.logspace(-10, 1, num=12, base=10.0) # 创建1e-10到10的12个数的等比数列
-
-# save experiments info
-# experiments_data = []
-sum_num_ids = np.array([0] * (len(perturbation_size_list)+2))
-sum_num_iter = np.array([0] * (len(perturbation_size_list)+2))
-sum_time_cost = np.array([0] * (len(perturbation_size_list)+2))
-
-# for benchmark, protected_attribs in [('C-a', [0]), ('C-r', [6]), ('C-g', [7]), ('C-a&r', [0,6]), ('C-a&g', [0,7]), ('C-r&g', [6,7])]:
-#     print('\n', benchmark, ':\n')
-#     method_num_speed_result = experiments.hyper_comparison(ROUND, benchmark, pre_census_income.X_train, protected_attribs, pre_census_income.constraint, adult_model, perturbation_size_list, g_num, l_num)
-#     experiments_data.append([benchmark, method_num_speed_result])
-# for benchmark, protected_attribs in [('G-g', [6]), ('G-a', [9]), ('G-g&a', [6,9])]:
-#     print('\n', benchmark, ':\n')
-#     method_num_speed_result = experiments.hyper_comparison(ROUND, benchmark, pre_german_credit.X_train, protected_attribs, pre_german_credit.constraint, german_model, perturbation_size_list, g_num, l_num)
-#     experiments_data.append([benchmark, method_num_speed_result])
-# print('\nB-a:\n')
-# method_num_speed_result = experiments.hyper_comparison(ROUND, 'B-a', pre_bank_marketing.X_train, [0], pre_bank_marketing.constraint, bank_model, perturbation_size_list, g_num, l_num)
-# experiments_data.append([benchmark, method_num_speed_result])
-
-for benchmark, protected_attribs in [('C-a', [0]), ('C-r', [6]), ('C-g', [7]), ('C-a&r', [0,6]), ('C-a&g', [0,7]), ('C-r&g', [6,7])]:
-    print('\n', benchmark, ':\n')
-    num_ids, num_iter, time_cost = experiments.hyper_comparison(ROUND, benchmark, pre_census_income.X_train, protected_attribs, pre_census_income.constraint, adult_model, perturbation_size_list, g_num, l_num)
-    sum_num_ids += num_ids
-    sum_num_iter += num_iter
-    sum_time_cost += time_cost
-for benchmark, protected_attribs in [('G-g', [6]), ('G-a', [9]), ('G-g&a', [6,9])]:
-    print('\n', benchmark, ':\n')
-    num_ids, num_iter, time_cost = experiments.hyper_comparison(ROUND, benchmark, pre_census_income.X_train, protected_attribs, pre_census_income.constraint, adult_model, perturbation_size_list, g_num, l_num)
-    sum_num_ids += num_ids
-    sum_num_iter += num_iter
-    sum_time_cost += time_cost
-print('\nB-a:\n')
-num_ids, num_iter, time_cost = experiments.hyper_comparison(ROUND, benchmark, pre_census_income.X_train, protected_attribs, pre_census_income.constraint, adult_model, perturbation_size_list, g_num, l_num)
-
-sum_num_ids += num_ids
-sum_num_iter += num_iter
-sum_time_cost += time_cost
-
-avg_num_ids = sum_num_ids / ROUND
-# avg_iter = sum_num_iter / ROUND / (7*(g_num * l_num)+3*(g_num * l_num))
-avg_iter = sum_num_iter / ROUND / (7*l_num + 3*l_num)
-avg_speed = sum_num_ids / sum_time_cost
-
-print('Results of global phase comparsion, averaged on', ROUND, 'rounds:')
-print('ADF:', avg_num_ids[0], 'individual discriminatory instances are generated at a speed of', avg_speed[0], 'per second.')
-print('EIDIG:', avg_num_ids[1], 'individual discriminatory instances are generated at a speed of', avg_speed[1], 'per second.')
-for index, perturbation_size in enumerate(perturbation_size_list):
-    # print('Perturbation_size set to {}:'.format(perturbation_size))
-    print('MAFT_{}'.format(perturbation_size), ':', avg_num_ids[index + 2], 'individual discriminatory instances are generated at a speed of',
-          avg_speed[index], 'per second.')
-
-
-
+from datetime import datetime
+import experiment_config
 import os
-dir = 'logging_data/hyper_comparison/hyper_comparison_info/'
-iter = '{}x{}_'.format(g_num, l_num)
+import pandas as pd
+import argparse
+
+parser = argparse.ArgumentParser(description='Experiment configuration')
+
+# 添加参数
+parser.add_argument('--round_id', type=int, default=1, help='The id of current round')
+parser.add_argument('--g_num', type=int, default=10, help='The number of seeds used in the global generation phase')
+parser.add_argument('--l_num', type=int, default=10, help='The maximum search iteration in the local generation phase')
+parser.add_argument('--should_restore_progress', type=lambda x: (str(x).lower() == 'true'), default=True, help='Control whether the experiment starts from scratch')
+
+# 解析参数
+args = parser.parse_args()
+
+# 使用参数
+round_id = args.round_id
+g_num = args.g_num
+l_num = args.l_num
+should_restore_progress = args.should_restore_progress
+ps_from = -10
+ps_to = 5
+perturbation_size_list = np.logspace(ps_from, ps_to, num=(ps_to - ps_from)+1, base=10.0) # 创建1e-10到1e5的等比数列
+
+iter = '{}x{}'.format(g_num, l_num)
+dir = 'logging_data/hyper_comparison/hyper_comparison_info/' + iter + '/'
 if not os.path.exists(dir):
     os.makedirs(dir)
+filename = dir + 'hyper_comparison_info_round_{}.csv'.format(round_id)
 
-'''
-保存数据
-'''
-np.save(dir + iter + 'hyper_comparison_avg_num_ids.npy', avg_num_ids)
-np.save(dir + iter + 'hyper_comparison_avg_iter.npy', avg_iter)
-np.save(dir + iter + 'hyper_comparison_avg_speed.npy', avg_speed)
+info = experiment_config.all_benchmark_info
 
-'''
-读取数据
-'''
-avg_num_ids = np.load(dir + iter + 'hyper_comparison_avg_num_ids.npy')
-avg_iter = np.load(dir + iter + 'hyper_comparison_avg_iter.npy')
-avg_speed = np.load(dir + iter + 'hyper_comparison_avg_speed.npy')
+all_benchmarks = [benchmark for benchmark in info.keys()]
+all_methods = ['ADF', 'EIDIG'] + ['MAFT_{}'.format(ps) for ps in perturbation_size_list]
+all_columns = ['round_id', 'benchmark', 'method', 'num_id', 'num_all_id', 'total_iter', 'time_cost']
 
-'''
-画图
-'''
+# 检查文件是否存在来决定是否需要跳过一些benchmarks
+if should_restore_progress and os.path.exists(filename):
+    # 如果文件存在，读取已经完成的benchmarks
+    existing_data = pd.read_csv(filename)
+    completed_benchmarks = existing_data['benchmark'].unique()
+    benchmarks_to_run = [b for b in all_benchmarks if b not in completed_benchmarks]
+else:
+    # 如果文件不存在，我们需要运行所有的benchmarks
+    completed_benchmarks = []
+    benchmarks_to_run = all_benchmarks
+    # 创建一个空的DataFrame，列与run_experiments函数返回的数据相匹配
+    existing_data = pd.DataFrame(columns=all_columns)
 
-import matplotlib.pyplot as plt
-
-fig, axs = plt.subplots(3, 1, figsize=(20, 10))
-
-perturbation_size_list = np.logspace(-10, 1, num=12, base=10.0) # 创建1e-10到10的12个数的等比数列
-methods = ['ADF', 'EIDIG']
-for perturbation_size in perturbation_size_list:
-    methods.append('MAFT-{}'.format(perturbation_size))
-
-# num图
-axs[0].plot(methods, avg_num_ids, marker='o')
-axs[0].set_title('Avg Num')
-axs[0].legend()
-
-# speed图
-axs[1].plot(methods, avg_speed, marker='o')
-axs[1].set_title('Avg Speed')
-axs[1].legend()
-
-# iter图
-axs[2].plot(methods, avg_iter, marker='o')
-axs[2].set_title('Avg Iter')
-axs[2].legend()
-
-plt.tight_layout()
-plt.savefig(dir + iter + 'hyper_comparison_result.png')
-plt.show()
+for benchmark in completed_benchmarks:
+    print(datetime.now())
+    print('Skipping benchmark {}'.format(benchmark))
+for benchmark in benchmarks_to_run:
+    print('\n', benchmark, ':\n')
+    print(datetime.now())
+    model, dataset, protected_attribs = info[benchmark]
+    num_ids, num_all_ids, total_iter, time_cost = experiments.hyper_comparison(round_id, benchmark, dataset.X_train, protected_attribs, dataset.constraint, model, perturbation_size_list, g_num, l_num)
+    # 为每个round/benchmark/method构建数据字典
+    for method_idx, method in enumerate(all_methods):
+        data_to_append = {
+            all_columns[0]: round_id,
+            all_columns[1]: benchmark,
+            all_columns[2]: method,
+            all_columns[3]: num_ids[method_idx],
+            all_columns[4]: num_all_ids[method_idx],
+            all_columns[5]: total_iter[method_idx],
+            all_columns[6]: time_cost[method_idx]
+        }
+        # 追加到现有数据中
+        existing_data = existing_data.append(data_to_append, ignore_index=True)
+    existing_data.to_csv(filename, index=False)

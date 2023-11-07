@@ -177,93 +177,76 @@ def gradient_comparison_local_probability(benchmark, X, protected_attribs, const
     print('--- END ', '---')
     return eidig_probabilities, maft_probabilities, eidig_time_cost, maft_time_cost
 
-def hyper_comparison(num_experiment_round, benchmark, X, protected_attribs, constraint, model, perturbation_size_list, g_num=1000, l_num=1000, decay=0.5, c_num=4, max_iter=10, s_g=1.0, s_l=1.0, epsilon_l=1e-6, fashion='RoundRobin'):
+def hyper_comparison(round_id, benchmark, X, protected_attribs, constraint, model, perturbation_size_list,
+                     g_num=1000, l_num=1000, decay=0.5, c_num=4, max_iter=10, s_g=1.0, s_l=1.0, epsilon_l=1e-6,
+                     fashion='RoundRobin'):
     # compare different perturbation_size in terms of effectiveness and efficiency of MAFT
 
-    num_ids = np.array([0] * (len(perturbation_size_list) + 2))
-    time_cost = np.array([0] * (len(perturbation_size_list) + 2))
-    num_iters = np.array([0] * (len(perturbation_size_list) + 2))
+    iter = '{}x{}'.format(g_num, l_num)
+    dir = 'logging_data/hyper_comparison/generate_instances/' + iter + '/'
+    if not os.path.exists(dir):
+        os.makedirs(dir)
 
-    for i in range(num_experiment_round):
-        round_now = i + 1
-        print('--- ROUND', round_now, '---')
-        if g_num >= len(X):
-            seeds = X.copy()
+    num_ids = np.array(
+        [0] * (len(perturbation_size_list) + 2))  # nums_id[i]表示第i个方法生成的的id数
+    num_all_ids = np.array([0] * (len(perturbation_size_list) + 2))
+    time_costs = np.array([0] * (len(perturbation_size_list) + 2))
+    total_iters = np.array([0] * (len(perturbation_size_list) + 2))
+
+    round_now = round_id
+    print('--- ROUND', round_now, '---')
+    if g_num >= len(X):
+        seeds = X.copy()
+    else:
+        clustered_data = generation_utilities.clustering(X, c_num)
+        seeds = np.empty(shape=(0, len(X[0])))
+        for i in range(g_num):
+            new_seed = generation_utilities.get_seed(clustered_data, len(X), c_num, i % c_num, fashion=fashion)
+            seeds = np.append(seeds, [new_seed], axis=0)
+
+    def run_algorithm(method, perturbation_size=None):
+        t1 = time.time()
+
+        if method == Method.ADF:
+            ids, gen, total_iter = ADF.individual_discrimination_generation(X, seeds, protected_attribs, constraint,
+                                                                            model, l_num, max_iter, s_g, s_l,
+                                                                            epsilon_l)
+        elif method == Method.EIDIG:
+            ids, gen, total_iter = EIDIG.individual_discrimination_generation(X, seeds, protected_attribs,
+                                                                              constraint, model, decay, l_num, 5,
+                                                                              max_iter, s_g, s_l, epsilon_l)
+        elif method == Method.MAFT:
+            ids, gen, total_iter = MAFT.individual_discrimination_generation(X, seeds, protected_attribs,
+                                                                             constraint, model, decay, l_num, 5,
+                                                                             max_iter, s_g, s_l, epsilon_l,
+                                                                             perturbation_size)
         else:
-            clustered_data = generation_utilities.clustering(X, c_num)
-            seeds = np.empty(shape=(0, len(X[0])))
-            for i in range(g_num):
-                new_seed = generation_utilities.get_seed(clustered_data, len(X), c_num, i%c_num, fashion=fashion)
-                seeds = np.append(seeds, [new_seed], axis=0)
+            raise ValueError("Invalid method")
 
-        # ADF
-        t1 = time.time()
-        ids_ADF, gen_ADF, total_iter_ADF = ADF.individual_discrimination_generation(X, seeds, protected_attribs,
-                                                                                    constraint, model, l_num, max_iter,
-                                                                                    s_g, s_l, epsilon_l)
-        np.save('logging_data/hyper_comparison/' + benchmark + '_ids_ADF_' + str(
-            round_now) + '.npy', ids_ADF)
+        np.save(dir + benchmark + '_ids_' + method.name + '_' + str(perturbation_size) + '_' + 'round' + str(round_now) + '.npy', ids)
         t2 = time.time()
-        print('ADF:', 'In', total_iter_ADF, 'search iterations', len(gen_ADF), 'non-duplicate instances are explored',
-              len(ids_ADF), 'of which are discriminatory. Time cost:', t2 - t1, 's.')
-        num_ids[0] += len(ids_ADF)
-        time_cost[0] += t2 - t1
-        num_iters[0] += total_iter_ADF
+        time_cost = t2 - t1
+        print('{}-{}: unique dis ins:{}, unique tot ins:{}, total iters:{}, time cost:{}, speed:{} ins/s, success rate:{}.'
+              .format(method.name, perturbation_size, len(ids), len(gen), total_iter, time_cost, len(ids)/time_cost, len(ids)/total_iter))
+        return ids, gen, total_iter, time_cost
 
-        # EIDIG
-        t1 = time.time()
-        ids_EIDIG_5, gen_EIDIG_5, total_iter_EIDIG_5 = EIDIG.individual_discrimination_generation(X, seeds,
-                                                                                                  protected_attribs,
-                                                                                                  constraint, model,
-                                                                                                  decay, l_num, 5,
-                                                                                                  max_iter, s_g, s_l,
-                                                                                                  epsilon_l)
-        np.save('logging_data/hyper_comparison/' + benchmark + '_ids_EIDIG_5_' + str(
-            round_now) + '.npy', ids_EIDIG_5)
-        t2 = time.time()
-        print('EIDIG-5:', 'In', total_iter_EIDIG_5, 'search iterations', len(gen_EIDIG_5),
-              'non-duplicate instances are explored', len(ids_EIDIG_5), 'of which are discriminatory. Time cost:',
-              t2 - t1, 's.')
-        num_ids[1] += len(ids_EIDIG_5)
-        time_cost[1] += t2 - t1
-        num_iters[1] += total_iter_EIDIG_5
+    for method in Method:
+        if(method == Method.MAFT):
+            for idx, perturbation_size_list in enumerate(perturbation_size_list):
+                ids, gen, total_iter, time_cost = run_algorithm(method, perturbation_size_list)
+                num_ids[method.value+idx] = len(ids)
+                num_all_ids[method.value+idx] = len(gen)
+                total_iters[method.value+idx] = total_iter
+                time_costs[method.value+idx] = time_cost
+        else:
+            ids, gen, total_iter, time_cost = run_algorithm(method)
+            num_ids[method.value] = len(ids)
+            num_all_ids[method.value] = len(gen)
+            total_iters[method.value] = total_iter
+            time_costs[method.value] = time_cost
 
-        # MAFT
-        for index, perturbation_size in enumerate(perturbation_size_list):
-            # print('Perturbation_size set to {}:'.format(perturbation_size))
-            t1 = time.time()
-            ids_MAFT, gen_MAFT, total_iter_MAFT = MAFT.individual_discrimination_generation(X, seeds,
-                                                                                              protected_attribs,
-                                                                                              constraint, model,
-                                                                                              decay, l_num, 5,
-                                                                                              max_iter, s_g, s_l,
-                                                                                              epsilon_l,
-                                                                                              perturbation_size)
-            np.save('logging_data/hyper_comparison/' + benchmark + '_ids_MAFT_' + str(
-                perturbation_size) + '_' + str(round_now) + '.npy', ids_MAFT)
-            t2 = time.time()
-            print('MAFT_{}:'.format(perturbation_size), 'In', total_iter_MAFT, 'search iterations', len(gen_MAFT),
-                  'non-duplicate instances are explored', len(ids_MAFT), 'of which are discriminatory. Time cost:',
-                  t2 - t1, 's.')
-            num_ids[index + 2] += len(ids_MAFT)
-            time_cost[index + 2] += t2 - t1
-            num_iters[index + 2] += total_iter_MAFT
-
-        print('\n')
-
-    methods = ['ADF', 'EIDIG']
-    avg_num_ids = num_ids / num_experiment_round
-    avg_speed = num_ids / time_cost
-    print('Results of hyper complete comparison on', benchmark, 'with g_num set to {} and l_num set to {}'.format(g_num, l_num), ',averaged on', num_experiment_round, 'rounds:')
-    print('ADF:', avg_num_ids[0], 'individual discriminatory instances are generated at a speed of', avg_speed[0], 'per second.')
-    print('EIDIG:', avg_num_ids[1], 'individual discriminatory instances are generated at a speed of', avg_speed[1], 'per second.')
-    for index, perturbation_size in enumerate(perturbation_size_list):
-        methods.append('MAFT_' + str(perturbation_size))
-        # print('Perturbation_size set to {}:'.format(perturbation_size))
-        print('MAFT_{}'.format(perturbation_size), ':', avg_num_ids[index+2], 'individual discriminatory instances are generated at a speed of', avg_speed[index], 'per second.')
-    # method_num_speed_result = [[method, avg_num, avg_speed] for method, avg_num, avg_speed in zip(methods, avg_num_ids, avg_speed)]
-    # return method_num_speed_result
-    return num_ids, num_iters, time_cost
+    print('\n')
+    return num_ids, num_all_ids, total_iters, time_costs
 
 def comparison(num_experiment_round, benchmark, X, protected_attribs, constraint, model, g_num=1000, l_num=1000, perturbation_size=1e-4, decay=0.5, c_num=4, max_iter=10, s_g=1.0, s_l=1.0, epsilon_l=1e-6, fashion='RoundRobin'):
     # compare MAFT with EIDIG and ADF in terms of effectiveness and efficiency
