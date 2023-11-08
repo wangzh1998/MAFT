@@ -35,7 +35,7 @@ filename = dir + 'hyper_comparison_info_round_{}.csv'.format(round_id)
 info = experiment_config.all_benchmark_info
 
 all_benchmarks = [benchmark for benchmark in info.keys()]
-all_methods = ['ADF', 'EIDIG'] + ['MAFT_{}'.format(ps) for ps in perturbation_size_list]
+all_methods = ['AEQUITAS', 'SG', 'ADF', 'EIDIG'] + ['MAFT_{}'.format(ps) for ps in perturbation_size_list] # 和experiment_config.py中的AllMethod保持一致
 all_columns = ['round_id', 'benchmark', 'method', 'num_id', 'num_all_id', 'total_iter', 'time_cost']
 
 # 检查文件是否存在来决定是否需要跳过一些benchmarks
@@ -58,7 +58,9 @@ for benchmark in benchmarks_to_run:
     print('\n', benchmark, ':\n')
     print(datetime.now())
     model, dataset, protected_attribs = info[benchmark]
-    num_ids, num_all_ids, total_iter, time_cost = experiments.hyper_comparison(round_id, benchmark, dataset.X_train, protected_attribs, dataset.constraint, model, perturbation_size_list, g_num, l_num)
+    num_ids, num_all_ids, total_iter, time_cost = experiments.hyper_comparison(round_id, benchmark, dataset.X_train, protected_attribs, dataset.constraint, model,
+                                                                               perturbation_size_list, dataset.initial_input, dataset.configurations,
+                                                                               g_num, l_num)
     # 为每个round/benchmark/method构建数据字典
     for method_idx, method in enumerate(all_methods):
         data_to_append = {

@@ -3,6 +3,13 @@ from preprocessing import pre_census_income, pre_german_credit, pre_bank_marketi
 from collections import OrderedDict
 from enum import Enum
 
+class AllMethod(Enum):
+    AEQUITAS = 0
+    SG = 1
+    ADF = 2
+    EIDIG = 3
+    MAFT = 4
+
 class Method(Enum):
     ADF = 0
     EIDIG = 1

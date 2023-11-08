@@ -17,7 +17,7 @@ import MAFT
 import AEQUITAS
 import SG
 import Gradient
-from experiment_config import Method, BlackboxMethod
+from experiment_config import Method, BlackboxMethod, AllMethod
 
 # allocate GPU and set dynamic memory growth
 os.environ['CUDA_VISIBLE_DEVICES'] = '0'
@@ -166,21 +166,22 @@ def gradient_comparison_local_probability(benchmark, X, protected_attribs, const
     print('--- END ', '---')
     return eidig_probabilities, maft_probabilities, eidig_time_cost, maft_time_cost
 
-def hyper_comparison(round_id, benchmark, X, protected_attribs, constraint, model, perturbation_size_list,
-                     g_num=1000, l_num=1000, decay=0.5, c_num=4, max_iter=10, s_g=1.0, s_l=1.0, epsilon_l=1e-6,
+def hyper_comparison(round_id, benchmark, X, protected_attribs, constraint, model, perturbation_size_list, initial_input=None, dataset_configuration = {},
+                     g_num=100, l_num=100, decay=0.5, c_num=4, max_iter=10, s_g=1.0, s_l=1.0, epsilon_l=1e-6,
                      fashion='RoundRobin'):
     # compare different perturbation_size in terms of effectiveness and efficiency of MAFT
 
     iter = '{}x{}'.format(g_num, l_num)
-    dir = 'logging_data/hyper_comparison/generate_instances/' + iter + '/'
+    dir = 'logging_data/hyper_comparison/hyper_comparison_instances/' + iter + '/'
     if not os.path.exists(dir):
         os.makedirs(dir)
 
-    num_ids = np.array(
-        [0] * (len(perturbation_size_list) + 2))  # nums_id[i]表示第i个方法生成的的id数
-    num_all_ids = np.array([0] * (len(perturbation_size_list) + 2))
-    time_costs = np.array([0] * (len(perturbation_size_list) + 2))
-    total_iters = np.array([0] * (len(perturbation_size_list) + 2))
+    base_methods_nums = len(AllMethod) - 1
+    tot_methods_num = base_methods_nums + len(perturbation_size_list)
+    num_ids = np.zeros(shape=(tot_methods_num))
+    num_all_ids = np.zeros_like(num_ids)
+    time_costs = np.zeros_like(num_ids)
+    total_iters = np.zeros_like(num_ids)
 
     round_now = round_id
     print('--- ROUND', round_now, '---')
@@ -195,16 +196,22 @@ def hyper_comparison(round_id, benchmark, X, protected_attribs, constraint, mode
 
     def run_algorithm(method, perturbation_size=None):
         t1 = time.time()
+        if method == AllMethod.AEQUITAS:
+            ids, gen, total_iter = AEQUITAS.individual_discrimination_generation(X, seeds, protected_attribs, constraint,
+                                                                            model, l_num, max_iter, s_g, s_l,
+                                                                            epsilon_l, initial_input)
 
-        if method == Method.ADF:
+        elif method == AllMethod.SG:
+            ids, gen, total_iter = SG.individual_discrimination_generation(X, seeds, protected_attribs, constraint, model, dataset_configuration, l_num)
+        elif method == AllMethod.ADF:
             ids, gen, total_iter = ADF.individual_discrimination_generation(X, seeds, protected_attribs, constraint,
                                                                             model, l_num, max_iter, s_g, s_l,
                                                                             epsilon_l)
-        elif method == Method.EIDIG:
+        elif method == AllMethod.EIDIG:
             ids, gen, total_iter = EIDIG.individual_discrimination_generation(X, seeds, protected_attribs,
                                                                               constraint, model, decay, l_num, 5,
                                                                               max_iter, s_g, s_l, epsilon_l)
-        elif method == Method.MAFT:
+        elif method == AllMethod.MAFT:
             ids, gen, total_iter = MAFT.individual_discrimination_generation(X, seeds, protected_attribs,
                                                                              constraint, model, decay, l_num, 5,
                                                                              max_iter, s_g, s_l, epsilon_l,
@@ -215,12 +222,17 @@ def hyper_comparison(round_id, benchmark, X, protected_attribs, constraint, mode
         np.save(dir + benchmark + '_ids_' + method.name + '_' + str(perturbation_size) + '_' + 'round' + str(round_now) + '.npy', ids)
         t2 = time.time()
         time_cost = t2 - t1
-        print('{}-{}: unique dis ins:{}, unique tot ins:{}, total iters:{}, time cost:{}, speed:{} ins/s, success rate:{}.'
+        if method == AllMethod.MAFT:
+            print('{}-{}: unique dis ins:{}, unique tot ins:{}, total iters:{}, time cost:{}, speed:{} ins/s, success rate:{}.'
               .format(method.name, perturbation_size, len(ids), len(gen), total_iter, time_cost, len(ids)/time_cost, len(ids)/total_iter))
+        else:
+            print('{}: unique dis ins:{}, unique tot ins:{}, total iters:{}, time cost:{}, speed:{} ins/s, success rate:{}.'
+                .format(method.name, len(ids), len(gen), total_iter, time_cost, len(ids) / time_cost,
+                        len(ids) / total_iter))
         return ids, gen, total_iter, time_cost
 
-    for method in Method:
-        if(method == Method.MAFT):
+    for method in AllMethod:
+        if(method == AllMethod.MAFT):
             for idx, perturbation_size_list in enumerate(perturbation_size_list):
                 ids, gen, total_iter, time_cost = run_algorithm(method, perturbation_size_list)
                 num_ids[method.value+idx] = len(ids)
