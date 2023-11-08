@@ -2,114 +2,76 @@
 This python file is used to run test experiments.
 """
 
-
-import experiments
-from preprocessing import pre_census_income, pre_german_credit, pre_bank_marketing, pre_meps_15, pre_heart_heath, pre_diabetes, pre_students
-from tensorflow import keras
-import json
 import os
-import time
-from collections import OrderedDict
 from datetime import datetime
+import argparse
+import pandas as pd
+import experiments
+import experiment_config
 
-def save_progress_data(dir, filename, data):
-    if not os.path.exists(dir):
-        os.makedirs(dir)
-    with open(dir + filename, 'w') as f:
-        json.dump(data, f, indent=4)
+parser = argparse.ArgumentParser(description='Experiment configuration')
+# 添加参数
+parser.add_argument('--round_id', type=int, default=1, help='The id of current round')
+parser.add_argument('--g_num', type=int, default=10, help='The number of seeds used in the global generation phase')
+parser.add_argument('--l_num', type=int, default=10, help='The maximum search iteration in the local generation phase')
+parser.add_argument('--perturbation_size', type=float, default=1, help='The perturbation size used in the MAFT method')
+parser.add_argument('--should_restore_progress', type=lambda x: (str(x).lower() == 'true'), default=True, help='Control whether the experiment starts from scratch')
+# 解析参数
+args = parser.parse_args()
+# 使用参数
+round_id = args.round_id
+g_num = args.g_num
+l_num = args.l_num
+perturbation_size = args.perturbation_size
+should_restore_progress = args.should_restore_progress
 
-def load_progress_data(dir, filename):
-    if not os.path.exists(dir):
-        return None
-    try:
-        with open(dir + filename, 'r') as f:
-            return json.load(f)
-    except FileNotFoundError:
-        return None
-
-
-"""
-for census income data, age(0), race(6) and gender(7) are protected attributes in 12 features
-for german credit data, gender(6) and age(9) are protected attributes in 24 features
-for bank marketing data, age(0) is protected attribute in 16 features
-"""
-
-
-# load models
-adult_model = keras.models.load_model("models/original_models/adult_model.h5")
-german_model = keras.models.load_model("models/original_models/german_model.h5")
-bank_model = keras.models.load_model("models/original_models/bank_model.h5")
-meps15_model = keras.models.load_model("models/original_models/meps15_model.h5")
-heart_model = keras.models.load_model("models/original_models/heart_model.h5")
-diabetes_model = keras.models.load_model("models/original_models/diabetes_model.h5")
-students_model = keras.models.load_model("models/original_models/students_model.h5")
-
-# save experiments info
-# experiments_data = []
-
-# test the implementation of ADF, EIDIG-5, MAFT-5
-ROUND = 2 # the number of experiment rounds
-g_num = 10 # the number of seeds used in the global generation phase
-l_num = 10 # the maximum search iteration in the local generation phase
-perturbation_size = 1 # the perturbation size used in the compute_gradient function
-should_restore_progress = False # control whether the experiment starts from scratch
-
-info = OrderedDict({
-    'C-a': (adult_model, pre_census_income, [0]),
-    'C-r': (adult_model, pre_census_income, [6]),
-    'C-g': (adult_model, pre_census_income, [7]),
-    'C-a&r': (adult_model, pre_census_income, [0, 6]),
-    'C-a&g': (adult_model, pre_census_income, [0, 7]),
-    'C-r&g': (adult_model, pre_census_income, [6, 7]),
-    'G-g': (german_model, pre_german_credit, [6]),
-    'G-a': (german_model, pre_german_credit, [9]),
-    'G-g&a': (german_model, pre_german_credit, [6, 9]),
-    'B-a': (bank_model, pre_bank_marketing, [0]),
-    'M-a': (meps15_model, pre_meps_15, [0]),
-    'M-r': (meps15_model, pre_meps_15, [1]),
-    'M-g': (meps15_model, pre_meps_15, [9]),
-    'M-a&r': (meps15_model, pre_meps_15, [0, 1]),
-    'M-a&g': (meps15_model, pre_meps_15, [0, 9]),
-    'M-r&g': (meps15_model, pre_meps_15, [1, 9]),
-    'H-a': (heart_model, pre_heart_heath, [0]),
-    'H-g': (heart_model, pre_heart_heath, [1]),
-    'H-a&g': (heart_model, pre_heart_heath, [0, 1]),
-    'D-a': (diabetes_model, pre_diabetes, [7]),
-    'S-a': (students_model, pre_students, [2]),
-    'S-g': (students_model, pre_students, [1]),
-    'S-a&g': (students_model, pre_students, [2, 1])
-})
-
-progress_data = {
-    'last_completed_benchmark': None,
-    'data': [{'benchmark': None, 'data': {'nums_id': [[]], 'time_cost': [[]]}}]
-}
-progress_data['data'] = [item for item in progress_data['data'] if item['benchmark'] is not None]
-
-# the individual discriminatory instances generated are saved to 'logging_data/logging_data_from_tests/complete_comparison_instances_bb/
+# the individual discriminatory instances generated are saved to 'logging_data/logging_data_from_tests/complete_comparison_instances_bb'
 iter = '{}x{}_H_{}'.format(g_num, l_num, perturbation_size)
 dir = 'logging_data/logging_data_from_tests/complete_comparison_info_bb/' + iter + '/'
-filename = 'progress_data.json'
-loaded_progress_data = load_progress_data(dir, filename)
-if should_restore_progress and loaded_progress_data is not None: # restore progress
-    progress_data = loaded_progress_data
-    last_completed_benchmark = loaded_progress_data['last_completed_benchmark']
-    last_benchmark_index = list(info.keys()).index(last_completed_benchmark)
-else:
-    # progress_data = None
-    last_completed_benchmark = ''
-    last_benchmark_index = -1
+if not os.path.exists(dir):
+    os.makedirs(dir)
+filename = dir + 'comparison_info_round_{}.csv'.format(round_id)
 
-for benchmark_index, (benchmark, (model, dataset, protected_attribs)) in enumerate(info.items()):
-    print('\n', benchmark, ':\n')
-    if benchmark_index <= last_benchmark_index:
-        print('skip')
-        continue
+info = experiment_config.all_benchmark_info
+all_benchmarks = [benchmark for benchmark in info.keys()]
+all_methods = [method.name for method in experiment_config.BlackboxMethod]
+all_columns = ['round_id', 'benchmark', 'method', 'num_id', 'num_all_id', 'total_iter', 'time_cost']
+
+# 检查文件是否存在来决定是否需要跳过一些benchmarks
+if should_restore_progress and os.path.exists(filename):
+    # 如果文件存在，读取已经完成的benchmarks
+    existing_data = pd.read_csv(filename)
+    completed_benchmarks = existing_data['benchmark'].unique()
+    benchmarks_to_run = [b for b in all_benchmarks if b not in completed_benchmarks]
+else:
+    # 如果文件不存在，我们需要运行所有的benchmarks
+    completed_benchmarks = []
+    benchmarks_to_run = all_benchmarks
+    # 创建一个空的DataFrame，列与run_experiments函数返回的数据相匹配
+    existing_data = pd.DataFrame(columns=all_columns)
+
+# todo perturbation_size用列表，从超参实验中按照benchmark选最优值
+# todo 返回T1,T1k数据
+for benchmark in completed_benchmarks:
     print(datetime.now())
-    num_ids, time_cost = experiments.comparison_blackbox(ROUND, benchmark, dataset.X_train, protected_attribs,dataset.constraint, model, g_num, l_num, perturbation_size, dataset.initial_input, dataset.configurations)
-    progress_data['last_completed_benchmark'] = benchmark
-    progress_data['data'].append({'benchmark': benchmark, 'data': {'nums_id': num_ids.tolist(), 'time_cost': time_cost.tolist()}})
-    save_progress_data(dir, filename, progress_data)
-    # print('sleep ' + str(100) + 's')
-    # time.sleep(100)
-    # print('wake up')
+    print('Skipping benchmark {}'.format(benchmark))
+for benchmark in benchmarks_to_run:
+    print('\n', benchmark, ':\n')
+    print(datetime.now())
+    model, dataset, protected_attribs = info[benchmark]
+    num_ids, num_all_ids, total_iter, time_cost = experiments.comparison_blackbox(round_id, benchmark, dataset.X_train, protected_attribs, dataset.constraint, model, g_num, l_num,
+                                                                         perturbation_size, dataset.initial_input, dataset.configurations)
+    # 为每个round/benchmark/method构建数据字典
+    for method_idx, method in enumerate(all_methods):
+        data_to_append = {
+            all_columns[0]: round_id,
+            all_columns[1]: benchmark,
+            all_columns[2]: method,
+            all_columns[3]: num_ids[method_idx],
+            all_columns[4]: num_all_ids[method_idx],
+            all_columns[5]: total_iter[method_idx],
+            all_columns[6]: time_cost[method_idx]
+        }
+        # 追加到现有数据中
+        existing_data = existing_data.append(data_to_append, ignore_index=True)
+    existing_data.to_csv(filename, index=False)

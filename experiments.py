@@ -263,7 +263,6 @@ def comparison(round_id, benchmark, X, protected_attribs, constraint, model, g_n
             seeds = np.append(seeds, [new_seed], axis=0)
 
     def run_algorithm(method):
-        nonlocal num_ids, time_cost
         t1 = time.time()
 
         if method == Method.ADF:
@@ -302,7 +301,7 @@ def comparison(round_id, benchmark, X, protected_attribs, constraint, model, g_n
 
 # 添加了参数initial_input
 # 为调用SG方法添加了参数dataset_configuration
-def comparison_blackbox(num_experiment_round, benchmark, X, protected_attribs, constraint, model, g_num=1000, l_num=1000, perturbation_size=1e-4, initial_input=None, dataset_configuration = {}, decay=0.5, c_num=4, max_iter=10, s_g=1.0, s_l=1.0, epsilon_l=1e-6, fashion='RoundRobin'):
+def comparison_blackbox(round_id, benchmark, X, protected_attribs, constraint, model, g_num=1000, l_num=1000, perturbation_size=1e-4, initial_input=None, dataset_configuration = {}, decay=0.5, c_num=4, max_iter=10, s_g=1.0, s_l=1.0, epsilon_l=1e-6, fashion='RoundRobin'):
     # compare MAFT with AEQUITAS in terms of effectiveness and efficiency
 
     iter = '{}x{}_H_{}'.format(g_num, l_num, perturbation_size)
@@ -311,62 +310,58 @@ def comparison_blackbox(num_experiment_round, benchmark, X, protected_attribs, c
         os.makedirs(dir)
 
     # 获取BBMethod的方法数
-    num_methods = len(BlackboxMethod)
-    num_ids = np.zeros(shape=(num_methods, num_experiment_round), dtype=np.float64)
-    time_cost = np.zeros(shape=(num_methods, num_experiment_round), dtype=np.float64)
+    method_nums = len(Method)
+    num_ids = np.zeros(shape=(method_nums))
+    num_all_ids = np.zeros(shape=(method_nums))
+    time_costs = np.zeros(shape=(method_nums))
+    total_iters = np.zeros(shape=(method_nums))
 
-    for i in range(num_experiment_round):
-        round_now = i + 1
-        print('--- ROUND', round_now, '---')
-        if g_num >= len(X):
-            seeds = X.copy()
+
+    round_now = round_id
+    print('--- ROUND', round_now, '---')
+    if g_num >= len(X):
+        seeds = X.copy()
+    else:
+        clustered_data = generation_utilities.clustering(X, c_num)
+        seeds = np.empty(shape=(0, len(X[0])))
+        for j in range(g_num):
+            new_seed = generation_utilities.get_seed(clustered_data, len(X), c_num, j%c_num, fashion=fashion)
+            seeds = np.append(seeds, [new_seed], axis=0)
+
+    def run_algorithm(method):
+        t1 = time.time()
+
+        if method == BlackboxMethod.AEQUITAS:
+            ids, gen, total_iter = AEQUITAS.individual_discrimination_generation(X, seeds, protected_attribs, constraint,
+                                                                            model, l_num, max_iter, s_g, s_l,
+                                                                            epsilon_l, initial_input)
+        elif method == BlackboxMethod.MAFT:
+            ids, gen, total_iter = MAFT.individual_discrimination_generation(X, seeds, protected_attribs,
+                                                                             constraint, model, decay, l_num, 5,
+                                                                             max_iter, s_g, s_l, epsilon_l,
+                                                                             perturbation_size)
+        elif method == BlackboxMethod.SG:
+            ids, gen, total_iter = SG.individual_discrimination_generation(X, seeds, protected_attribs, constraint, model, dataset_configuration, l_num)
         else:
-            clustered_data = generation_utilities.clustering(X, c_num)
-            seeds = np.empty(shape=(0, len(X[0])))
-            for j in range(g_num):
-                new_seed = generation_utilities.get_seed(clustered_data, len(X), c_num, j%c_num, fashion=fashion)
-                seeds = np.append(seeds, [new_seed], axis=0)
+            raise ValueError("Invalid method")
 
-        def run_algorithm(method):
-            nonlocal num_ids, time_cost
-            t1 = time.time()
+        np.save(dir + benchmark + '_ids_' + method.name + '_' + str(round_now) + '.npy', ids)
+        t2 = time.time()
+        time_cost = t2 - t1
+        print(
+            '{}: unique dis ins:{}, unique tot ins:{}, total iters:{}, time cost:{}, speed:{} ins/s, success rate:{}.'
+            .format(method.name, len(ids), len(gen), total_iter, time_cost, len(ids) / time_cost,
+                    len(ids) / total_iter))
+        return ids, gen, total_iter, time_cost
 
-            if method == BlackboxMethod.AEQUITAS:
-                ids, gen, total_iter = AEQUITAS.individual_discrimination_generation(X, seeds, protected_attribs, constraint,
-                                                                                model, l_num, max_iter, s_g, s_l,
-                                                                                epsilon_l, initial_input)
-            elif method == BlackboxMethod.SG:
-                ids, gen, total_iter = SG.individual_discrimination_generation(X, seeds, protected_attribs, constraint, model, dataset_configuration, l_num)
-            elif method == BlackboxMethod.MAFT:
-                ids, gen, total_iter = MAFT.individual_discrimination_generation(X, seeds, protected_attribs,
-                                                                                 constraint, model, decay, l_num, 5,
-                                                                                 max_iter, s_g, s_l, epsilon_l,
-                                                                                 perturbation_size)
-            else:
-                raise ValueError("Invalid method")
-
-            np.save(dir + benchmark + '_ids_' + method.name + '_' + str(round_now) + '.npy', ids)
-            t2 = time.time()
-            print(method.name, 'In', total_iter, 'search iterations', len(gen),
-                  'non-duplicate instances are explored', len(ids), 'of which are discriminatory. Time cost:', t2 - t1,
-                  's.')
-            num_ids[method.value][i] = len(ids)
-            time_cost[method.value][i] = t2 - t1
-
-        for method in BlackboxMethod:
-            run_algorithm(method)
-        print('\n')
-
-    avg_num_ids = np.mean(num_ids, axis=1)
-    avg_speed = np.mean(num_ids / time_cost, axis=1) # 更新了计算平均值的方式，和后面在分析时同步
-    print('Results of complete comparison on', benchmark,
-          'with g_num set to {} and l_num set to {}'.format(g_num, l_num), ',averaged on', num_experiment_round,
-          'rounds:')
     for method in BlackboxMethod:
-        print(method.name, ':', avg_num_ids[method.value],
-              'individual discriminatory instances are generated at a speed of', avg_speed[method.value],
-              'per second.')
-    return num_ids, time_cost
+        ids, gen, total_iter, time_cost = run_algorithm(method)
+        num_ids[method.value] = len(ids)
+        num_all_ids[method.value] = len(gen)
+        total_iters[method.value] = total_iter
+        time_costs[method.value] = time_cost
+    print('\n')
+    return num_ids, num_all_ids, total_iters, time_costs
 
 def global_comparison(num_experiment_round, benchmark, X, protected_attribs, constraint, model, decay_list, num_seeds=1000, c_num=4, max_iter=10, s_g=1.0):
     # compare the global phase given the same set of seeds
