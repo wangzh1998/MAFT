@@ -17,6 +17,7 @@ import MAFT
 import AEQUITAS
 import SG
 import Gradient
+from experiment_config import Method, BlackboxMethod
 
 # allocate GPU and set dynamic memory growth
 os.environ['CUDA_VISIBLE_DEVICES'] = '0'
@@ -29,18 +30,6 @@ for gpu in gpus:
 # alternatively remove them when dealing with real-world issues
 np.random.seed(42)
 tf.random.set_seed(42)
-
-# arr = np.logspace(-10, 1, num=12, base=10.0) # 创建1e-10到10的12个数的等比数列
-
-class Method(Enum):
-    ADF = 0
-    EIDIG = 1
-    MAFT = 2
-
-class BlackboxMethod(Enum):
-    AEQUITAS = 0
-    SG = 1
-    MAFT = 2
 
 def gradient_comparison(benchmark, X, model, g_num=1000, perturbation_size=1e-4, l_num=1000, decay=0.5, c_num=4, max_iter=10, s_g=1.0, s_l=1.0, epsilon_l=1e-6, fashion='RoundRobin'):
     # compare different perturbation_size in terms of effectiveness and efficiency of MAFT
@@ -248,7 +237,7 @@ def hyper_comparison(round_id, benchmark, X, protected_attribs, constraint, mode
     print('\n')
     return num_ids, num_all_ids, total_iters, time_costs
 
-def comparison(num_experiment_round, benchmark, X, protected_attribs, constraint, model, g_num=1000, l_num=1000, perturbation_size=1e-4, decay=0.5, c_num=4, max_iter=10, s_g=1.0, s_l=1.0, epsilon_l=1e-6, fashion='RoundRobin'):
+def comparison(round_id, benchmark, X, protected_attribs, constraint, model, g_num=1000, l_num=1000, perturbation_size=1e-4, decay=0.5, c_num=4, max_iter=10, s_g=1.0, s_l=1.0, epsilon_l=1e-6, fashion='RoundRobin'):
     # compare MAFT with EIDIG and ADF in terms of effectiveness and efficiency
 
     iter = '{}x{}_H_{}'.format(g_num, l_num, perturbation_size)
@@ -256,63 +245,60 @@ def comparison(num_experiment_round, benchmark, X, protected_attribs, constraint
     if not os.path.exists(dir):
         os.makedirs(dir)
 
-    num_ids = np.zeros(shape=(3, num_experiment_round))
-    time_cost = np.zeros(shape=(3, num_experiment_round))
+    method_nums = len(Method)
+    num_ids = np.zeros(shape=(method_nums))
+    num_all_ids = np.zeros(shape=(method_nums))
+    time_costs = np.zeros(shape=(method_nums))
+    total_iters = np.zeros(shape=(method_nums))
 
-    for i in range(num_experiment_round):
-        round_now = i + 1
-        print('--- ROUND', round_now, '---')
-        if g_num >= len(X):
-            seeds = X.copy()
+    round_now = round_id
+    print('--- ROUND', round_now, '---')
+    if g_num >= len(X):
+        seeds = X.copy()
+    else:
+        clustered_data = generation_utilities.clustering(X, c_num)
+        seeds = np.empty(shape=(0, len(X[0])))
+        for j in range(g_num):
+            new_seed = generation_utilities.get_seed(clustered_data, len(X), c_num, j%c_num, fashion=fashion)
+            seeds = np.append(seeds, [new_seed], axis=0)
+
+    def run_algorithm(method):
+        nonlocal num_ids, time_cost
+        t1 = time.time()
+
+        if method == Method.ADF:
+            ids, gen, total_iter = ADF.individual_discrimination_generation(X, seeds, protected_attribs, constraint,
+                                                                            model, l_num, max_iter, s_g, s_l,
+                                                                            epsilon_l)
+        elif method == Method.EIDIG:
+            ids, gen, total_iter = EIDIG.individual_discrimination_generation(X, seeds, protected_attribs,
+                                                                              constraint, model, decay, l_num, 5,
+                                                                              max_iter, s_g, s_l, epsilon_l)
+        elif method == Method.MAFT:
+            ids, gen, total_iter = MAFT.individual_discrimination_generation(X, seeds, protected_attribs,
+                                                                             constraint, model, decay, l_num, 5,
+                                                                             max_iter, s_g, s_l, epsilon_l,
+                                                                             perturbation_size)
         else:
-            clustered_data = generation_utilities.clustering(X, c_num)
-            seeds = np.empty(shape=(0, len(X[0])))
-            for j in range(g_num):
-                new_seed = generation_utilities.get_seed(clustered_data, len(X), c_num, j%c_num, fashion=fashion)
-                seeds = np.append(seeds, [new_seed], axis=0)
+            raise ValueError("Invalid method")
 
-        def run_algorithm(method):
-            nonlocal num_ids, time_cost
-            t1 = time.time()
+        np.save(dir + benchmark + '_ids_' + method.name + '_' + str(round_now) + '.npy', ids)
+        t2 = time.time()
+        time_cost = t2 - t1
+        print(
+            '{}: unique dis ins:{}, unique tot ins:{}, total iters:{}, time cost:{}, speed:{} ins/s, success rate:{}.'
+            .format(method.name, len(ids), len(gen), total_iter, time_cost, len(ids) / time_cost,
+                    len(ids) / total_iter))
+        return ids, gen, total_iter, time_cost
 
-            if method == Method.ADF:
-                ids, gen, total_iter = ADF.individual_discrimination_generation(X, seeds, protected_attribs, constraint,
-                                                                                model, l_num, max_iter, s_g, s_l,
-                                                                                epsilon_l)
-            elif method == Method.EIDIG:
-                ids, gen, total_iter = EIDIG.individual_discrimination_generation(X, seeds, protected_attribs,
-                                                                                  constraint, model, decay, l_num, 5,
-                                                                                  max_iter, s_g, s_l, epsilon_l)
-            elif method == Method.MAFT:
-                ids, gen, total_iter = MAFT.individual_discrimination_generation(X, seeds, protected_attribs,
-                                                                                 constraint, model, decay, l_num, 5,
-                                                                                 max_iter, s_g, s_l, epsilon_l,
-                                                                                 perturbation_size)
-            else:
-                raise ValueError("Invalid method")
-
-            np.save(dir + benchmark + '_ids_' + method.name + '_' + str(round_now) + '.npy', ids)
-            t2 = time.time()
-            print(method.name, 'In', total_iter, 'search iterations', len(gen),
-                  'non-duplicate instances are explored', len(ids), 'of which are discriminatory. Time cost:', t2 - t1,
-                  's.')
-            num_ids[method.value][i] = len(ids)
-            time_cost[method.value][i] = t2 - t1
-
-        for method in Method:
-            run_algorithm(method)
-        print('\n')
-
-    avg_num_ids = np.mean(num_ids, axis=1)
-    avg_speed = np.mean(num_ids / time_cost, axis=1) # 更新了计算平均值的方式，和后面在分析时同步
-    print('Results of complete comparison on', benchmark,
-          'with g_num set to {} and l_num set to {}'.format(g_num, l_num), ',averaged on', num_experiment_round,
-          'rounds:')
     for method in Method:
-        print(method.name, ':', avg_num_ids[method.value],
-              'individual discriminatory instances are generated at a speed of', avg_speed[method.value],
-              'per second.')
-    return num_ids, time_cost
+        ids, gen, total_iter, time_cost = run_algorithm(method)
+        num_ids[method.value] = len(ids)
+        num_all_ids[method.value] = len(gen)
+        total_iters[method.value] = total_iter
+        time_costs[method.value] = time_cost
+    print('\n')
+    return num_ids, num_all_ids, total_iters, time_costs
 
 # 添加了参数initial_input
 # 为调用SG方法添加了参数dataset_configuration

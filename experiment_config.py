@@ -1,6 +1,17 @@
 from tensorflow import keras
 from preprocessing import pre_census_income, pre_german_credit, pre_bank_marketing, pre_meps_15, pre_heart_heath, pre_diabetes, pre_students
 from collections import OrderedDict
+from enum import Enum
+
+class Method(Enum):
+    ADF = 0
+    EIDIG = 1
+    # MAFT = 2
+
+class BlackboxMethod(Enum):
+    AEQUITAS = 0
+    MAFT = 1
+    # SG =
 
 # load models
 adult_model = keras.models.load_model("models/original_models/adult_model.h5")
