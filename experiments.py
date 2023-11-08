@@ -350,7 +350,7 @@ def comparison_blackbox(num_experiment_round, benchmark, X, protected_attribs, c
                                                                                 model, l_num, max_iter, s_g, s_l,
                                                                                 epsilon_l, initial_input)
             elif method == BlackboxMethod.SG:
-                ids, gen, total_iter = SG.individual_discrimination_generation(X, seeds, protected_attribs, constraint, model, dataset_configuration)
+                ids, gen, total_iter = SG.individual_discrimination_generation(X, seeds, protected_attribs, constraint, model, dataset_configuration, l_num)
             elif method == BlackboxMethod.MAFT:
                 ids, gen, total_iter = MAFT.individual_discrimination_generation(X, seeds, protected_attribs,
                                                                                  constraint, model, decay, l_num, 5,

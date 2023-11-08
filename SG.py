@@ -146,7 +146,8 @@ def gen_arguments(conf):
         arguments.append(Int(conf['feature_name'][i]))
     return arguments
 
-def symbolic_generation(X, seeds, protected_attribs, constraint, model, limit, conf):
+# 增加一个l_num参数, 将终止条件由len(tot_inputs) < limit改为try_times < limit * l_num，便于和两段式的方法同步进行比较（用于设定接近的搜索次数）
+def symbolic_generation(X, seeds, protected_attribs, constraint, model, limit, conf, l_num=1):
     """
     The implementation of symbolic generation
     """
@@ -181,7 +182,8 @@ def symbolic_generation(X, seeds, protected_attribs, constraint, model, limit, c
     visited_path = []
     l_count = 0
     g_count = 0
-    while len(tot_inputs) < limit and q.qsize() != 0:
+    # while len(tot_inputs) < limit and q.qsize() != 0:
+    while try_times < limit * l_num and q.qsize() != 0:
         t = q.get()
         t_rank = t[0]
         t = np.array(t[1])
@@ -204,8 +206,8 @@ def symbolic_generation(X, seeds, protected_attribs, constraint, model, limit, c
             else:
                 l_id = np.append(l_id, [temp], axis=0)
                 # all_gen_l = np.append(all_gen_l, [temp], axis=0)
-            if len(tot_inputs) == limit:
-                break
+            # if len(tot_inputs) == limit:
+            #     break
 
             # local search
             for i in range(len(p)):
@@ -232,6 +234,9 @@ def symbolic_generation(X, seeds, protected_attribs, constraint, model, limit, c
                     if input != None:
                         r = average_confidence(path_constraint)
                         q.put((rank2 + r, input))
+
+                if try_times == limit * l_num:
+                    break
 
         # global search
         prefix_pred = []
@@ -262,6 +267,8 @@ def symbolic_generation(X, seeds, protected_attribs, constraint, model, limit, c
                     r = average_confidence(path_constraint)
                     q.put((rank3-r, input))
 
+            if try_times == limit * l_num:
+                break
             prefix_pred = prefix_pred + [c]
     # l_id = np.array(list(set([tuple(id) for id in l_id])))
     # g_id = np.array(list(set([tuple(id) for id in g_id])))
@@ -276,8 +283,9 @@ def symbolic_generation(X, seeds, protected_attribs, constraint, model, limit, c
         g_l_id = np.vstack((g_id, l_id))
     return g_l_id, all_gen_g_l, try_times
 
-def individual_discrimination_generation(X, seeds, protected_attribs, constraint, model, dataset_configuration):
-    all_id, all_gen, all_gen_num = symbolic_generation(X, seeds, protected_attribs, constraint, model, limit=len(seeds), conf=dataset_configuration)
+# 增加一个l_num参数
+def individual_discrimination_generation(X, seeds, protected_attribs, constraint, model, dataset_configuration, l_num):
+    all_id, all_gen, all_gen_num = symbolic_generation(X, seeds, protected_attribs, constraint, model, limit=len(seeds), conf=dataset_configuration, l_num=l_num)
     all_id_nondup = np.array(list(set([tuple(id) for id in all_id])))
     all_gen_nondup = np.array(list(set([tuple(gen) for gen in all_gen])))
     return all_id_nondup, all_gen_nondup, all_gen_num
