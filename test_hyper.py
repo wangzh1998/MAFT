@@ -23,7 +23,7 @@ g_num = args.g_num
 l_num = args.l_num
 should_restore_progress = args.should_restore_progress
 ps_from = -10
-ps_to = 5
+ps_to = 1
 perturbation_size_list = np.logspace(ps_from, ps_to, num=(ps_to - ps_from)+1, base=10.0) # 创建1e-10到1e5的等比数列
 
 iter = '{}x{}'.format(g_num, l_num)
