@@ -4,61 +4,27 @@ This python file is used to run test experiments.
 
 
 import experiments
-from preprocessing import pre_census_income
-from preprocessing import pre_german_credit
-from preprocessing import pre_bank_marketing
-from tensorflow import keras
 import numpy as np
 import os
+import experiment_config
 
+info = experiment_config.all_benchmark_info
+all_benchmarks = [benchmark for benchmark in info.keys()]
 
-"""
-for census income data, age(0), race(6) and gender(7) are protected attributes in 12 features
-for german credit data, gender(6) and age(9) are protected attributes in 24 features
-for bank marketing data, age(0) is protected attribute in 16 features
-"""
-
-
-# load models
-adult_model = keras.models.load_model("models/original_models/adult_model.h5")
-german_model = keras.models.load_model("models/original_"
-                                       ""
-                                       "models/german_model.h5")
-bank_model = keras.models.load_model("models/original_models/bank_model.h5")
-
-
-# test the implementation of ADF, EIDIG-5, EIDIG-INF
-# the individual discriminatory instances generated are saved to 'logging_data/logging_data_from_tests/complete_comparison'
 g_num = 1000 # the number of seeds used in the global generation phase
-# todo 是否需要改成1e-4
 perturbation_size = 1 # the perturbation size used in the compute_gradient function
 # results of experiments to save
 results = []
 
-benchmarks_list = [('C-a', [0]), ('C-r', [6]), ('C-g', [7]), ('C-a&r', [0, 6]), ('C-a&g', [0, 7]), ('C-r&g', [6, 7]),
-                   ('G-g', [6]), ('G-a', [9]), ('G-g&a', [6, 9]), ('B-a', [])]
-
-for benchmark, protected_attribs in benchmarks_list:
+for benchmark in all_benchmarks:
     print('\n', benchmark, ':\n')
-    if 'G' in benchmark:
-        data = pre_german_credit.X_train
-        constraint = pre_german_credit.constraint
-        model = german_model
-    elif 'B' in benchmark:
-        data = pre_bank_marketing.X_train
-        constraint = pre_bank_marketing.constraint
-        model = bank_model
-    else:
-        data = pre_census_income.X_train
-        constraint = pre_census_income.constraint
-        model = adult_model
-
-    # adf_directions, eidig_gradients, maft_gradients, adf_time_cost, eidig_time_cost, maft_time_cost = experiments.gradient_comparison(benchmark, data,
-    #                                                                                                    model, g_num,
-    #                                                                                                    perturbation_size)
-    eidig_directions, maft_directions, eidig_time_cost, maft_time_cost = experiments.gradient_comparison_global_direction(benchmark, data, protected_attribs, constraint,
-                                                                                                       model, g_num,
-                                                                                                       perturbation_size)
+    model, dataset, protected_attribs = info[benchmark]
+    data = dataset.X_train
+    constraint = dataset.constraint
+    eidig_directions, maft_directions, eidig_time_cost, maft_time_cost = experiments.gradient_comparison_global_direction(
+        benchmark, data, protected_attribs, constraint,
+        model, g_num,
+        perturbation_size)
     result = [benchmark, eidig_directions, maft_directions, eidig_time_cost, maft_time_cost]
     results.append(result)
 
@@ -82,7 +48,8 @@ np.save(dir + iter + 'experiment_results.npy', results)
 '''
 读取数据 暂时不写
 '''
-# data = np.load('dir + iter + experiment_results.npy', allow_pickle=True)
+# data = np.load(dir + iter + 'experiment_results.npy', allow_pickle=True)
+# results = data
 
 
 '''
