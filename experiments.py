@@ -47,7 +47,7 @@ def gradient_comparison(benchmark, X, model, g_num=1000, perturbation_size=1e-4,
     # ADF
     t1 = time.time()
     adf_gradients = Gradient.adf_gradient_generation(seeds, len(X[0]), model)
-    # np.save('logging_data/gradients_comparison/' + benchmark + '_ADF_gradient' + '.npy', adf_gradients)
+    np.save('logging_data/gradients_comparison/' + benchmark + '_ADF_gradient' + '.npy', adf_gradients)
     t2 = time.time()
     adf_time_cost = t2 - t1
     print('ADF:', 'Generate gradients of ', len(seeds), ' seeds on benchmark ', benchmark, '. Time cost:', t2 - t1,
@@ -56,7 +56,7 @@ def gradient_comparison(benchmark, X, model, g_num=1000, perturbation_size=1e-4,
     # EIDIG
     t1 = time.time()
     eidig_gradients = Gradient.eidig_gradient_generation(seeds, len(X[0]), model)
-    # np.save('logging_data/gradients_comparison/' + benchmark + '_EIDIG_gradient' + '.npy', eidig_gradients)
+    np.save('logging_data/gradients_comparison/' + benchmark + '_EIDIG_gradient' + '.npy', eidig_gradients)
     t2 = time.time()
     eidig_time_cost = t2 - t1
     print('EIDIG-5:', 'Generate gradients of ', len(seeds), ' seeds on benchmark ', benchmark, '. Time cost:',
@@ -65,7 +65,7 @@ def gradient_comparison(benchmark, X, model, g_num=1000, perturbation_size=1e-4,
     # MAFT
     t1 = time.time()
     maft_gradients = Gradient.maft_gradient_generation(seeds, len(X[0]), model, perturbation_size)
-    # np.save('logging_data/gradients_comparison/' + benchmark + '_MAFT_gradient' + '.npy', maft_gradients)
+    np.save('logging_data/gradients_comparison/' + benchmark + '_MAFT_gradient' + '.npy', maft_gradients)
     t2 = time.time()
     maft_time_cost = t2 - t1
     print('MAFT-5:', 'Generate gradients of ', len(seeds), ' seeds on benchmark ', benchmark, '. Time cost:',
@@ -74,7 +74,7 @@ def gradient_comparison(benchmark, X, model, g_num=1000, perturbation_size=1e-4,
     # MAFT non-vectorized
     t1 = time.time()
     maft_gradients_non_vec = Gradient.maft_gradient_generation_non_vec(seeds, len(X[0]), model, perturbation_size)
-    # np.save('logging_data/gradients_comparison/' + benchmark + '_MAFT_gradient' + '.npy', maft_gradients)
+    np.save('logging_data/gradients_comparison/' + benchmark + '_MAFT_gradient' + '.npy', maft_gradients)
     t2 = time.time()
     maft_time_cost_non_vec = t2 - t1
     print('MAFT-5-non-vec:', 'Generate gradients of ', len(seeds), ' seeds on benchmark ', benchmark, '. Time cost:',
