@@ -49,10 +49,11 @@ for method, data in transformed_data_dict.items():
     plt.scatter(data[:, 0], data[:, 1], color=colors[method], alpha=0.5, label=method)
 
 # 添加图例和标签
-plt.xlabel('First Principal Component (PC1)')
-plt.ylabel('Second Principal Component (PC2)')
-plt.title('PCA of Gradient Data Across Benchmarks and Methods')
-plt.legend()
+plt.xlabel('First Principal Component (PC1)', fontsize=18)
+plt.ylabel('Second Principal Component (PC2)', fontsize=18)
+plt.title('PCA of Gradient Data Across Benchmarks and Methods', fontsize=20)
+plt.legend('Method', fontsize=18)
+plt.tick_params(axis='both', which='major', labelsize=18)
 plt.savefig('logging_data/gradients_comparison/PCA.svg')
 plt.show()
 
