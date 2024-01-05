@@ -1,15 +1,11 @@
 """
-This python file implement our approach EIDIG
-Modify this for compare of EIDIG (real gradient) and MAFT (estimated gradient)
+This python file implement different gradient methods: ADF, EIDIG and MAFT.
+Implement this for compare of ADF(original gradient), EIDIG (real gradient) and MAFT (estimated gradient)
 """
 
 import numpy as np
 import tensorflow as tf
 from tensorflow import keras
-from sklearn import cluster
-import itertools
-import time
-import generation_utilities
 
 def compute_grad_adf(x, model, loss_func=keras.losses.binary_crossentropy):
     # compute the gradient of loss w.r.t input attributes
@@ -35,8 +31,6 @@ def compute_grad_eidig(x, model):
 
 def compute_grad_maft(x, model, perturbation_size=1e-4):
     # compute the gradient of model perdictions w.r.t input attributes
-    # 将x中每个属性+h，形成n个新实例，得到X。将X投入model，得到Y。再根据Y求对X的模拟偏导数，得到n个偏导数后，合并起来构成模拟导数。
-    # Y是Tensor(n,1) n行1列，每一行的y值是输出的概率值，而不是实数标签 如果用实数标签，算出来的梯度就不准
     h = perturbation_size
     n = len(x)
     e = np.empty(n)
@@ -58,22 +52,19 @@ def compute_grad_maft_non_vectorized(x, model, perturbation_size=1e-4):
     y_pred = model(tf.constant([x], dtype=tf.float32))
     gradient = np.empty(n)
     for i in range(n):
-        # 扰动第i个属性
+        # perturb the i_th attribute
         x_perturbed = np.copy(x)
         x_perturbed[i] += h
-        # 计算模型在扰动后的输出
+        # calculate the model output after perturbation
         x_perturbed = tf.constant([x_perturbed], dtype=tf.float32)
         y_perturbed = model(x_perturbed)
-
-        # 计算梯度
+        # calculate the gradient on the i_th attribute
         gradient[i] = (y_perturbed - y_pred) / h
 
     return gradient if model(tf.constant([x])) > 0.5 else -gradient
 
-
-# 对seeds的真实梯度和模拟梯度进行对比
-# 三个方法取的种子应该是一样的，这样才方便进行后续对比
-
+# compare the real gradient and estimated gradient
+# same seeds should be used for all methods
 def adf_gradient_generation(seeds, num_attribs, model):
     g_num = len(seeds)
     adf_gradients = np.empty(shape=(0, num_attribs))
