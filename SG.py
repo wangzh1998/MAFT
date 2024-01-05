@@ -1,5 +1,5 @@
 """
-This python file implement AEQUITAS.
+This python file implement SG.
 """
 
 import numpy as np
@@ -146,7 +146,8 @@ def gen_arguments(conf):
         arguments.append(Int(conf['feature_name'][i]))
     return arguments
 
-# 增加一个l_num参数, 将终止条件由len(tot_inputs) < limit改为try_times < limit * l_num，便于和两段式的方法同步进行比较（用于设定接近的搜索次数）
+# add aditioninal 'l_num' parameter, change the termination condition from 'len(tot_inputs) < limit' to 'try_times < limit * l_num',
+# which is convenient for comparison with the two-stage method (used to set the approximate number of search)
 def symbolic_generation(X, seeds, protected_attribs, constraint, model, limit, conf, l_num=1):
     """
     The implementation of symbolic generation
@@ -283,7 +284,7 @@ def symbolic_generation(X, seeds, protected_attribs, constraint, model, limit, c
         g_l_id = np.vstack((g_id, l_id))
     return g_l_id, all_gen_g_l, try_times
 
-# 增加一个l_num参数
+# add 'l_num' to limit the number of search
 def individual_discrimination_generation(X, seeds, protected_attribs, constraint, model, dataset_configuration, l_num):
     all_id, all_gen, all_gen_num = symbolic_generation(X, seeds, protected_attribs, constraint, model, limit=len(seeds), conf=dataset_configuration, l_num=l_num)
     all_id_nondup = np.array(list(set([tuple(id) for id in all_id])))

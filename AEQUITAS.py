@@ -11,8 +11,8 @@ import itertools
 import time
 import generation_utilities
 
-# 添加了initial_input参数
-# try_times参数等价于seeds数目
+# initial_input as input parameter
+# let try_times = seeds
 def global_generation(X, seeds, num_attribs, protected_attribs, constraint, model, max_iter, s_g, initial_input):
     # global generation phase of AEQUITAS
 
@@ -34,7 +34,7 @@ def global_generation(X, seeds, num_attribs, protected_attribs, constraint, mode
     g_id = np.array(list(set([tuple(id) for id in g_id])))
     return g_id, all_gen_g, try_times
 
-# 添加param_probability, param_probability_change_size,direction_probability, direction_probability_change_size参数
+# param_probability, param_probability_change_size,direction_probability, direction_probability_change_size as input parameters
 def local_generation(num_attribs, l_num, g_id, protected_attribs, constraint, model, s_l, epsilon, param_probability, param_probability_change_size,
                  direction_probability, direction_probability_change_size):
     # local generation phase of AEQUITAS
@@ -88,7 +88,7 @@ def local_generation(num_attribs, l_num, g_id, protected_attribs, constraint, mo
     return l_id, all_gen_l, try_times
 
 
-# 添加参数：不同dataset对应的initial_input
+# initial_input as input parameter
 def individual_discrimination_generation(X, seeds, protected_attribs, constraint, model, l_num, max_iter=10, s_g=1.0,
                                          s_l=1.0, epsilon=1e-6, initial_input=None):
     # complete implementation of AEQUITAS

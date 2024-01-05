@@ -1,5 +1,5 @@
 """
-This python file implement our approach EIDIG, and it can be simply applied to other differentiable prediction models.
+This python file implement approach EIDIG, and it can be simply applied to other differentiable prediction models.
 """
 
 

@@ -1,5 +1,5 @@
 """
-This python file implement our approach BBDIG, and it can be simply applied to other differentiable prediction models.
+This python file implement our approach MAFT, and it also can be simply applied to other differentiable prediction models.
 """
 
 import numpy as np
@@ -13,8 +13,6 @@ import generation_utilities
 
 def compute_grad(x, model, perturbation_size=1e-4):
     # compute the gradient of model perdictions w.r.t input attributes
-    # 将x中每个属性+h，形成n个新实例，得到X。将X投入model，得到Y。再根据Y求对X的模拟偏导数，得到n个偏导数后，合并起来构成模拟导数。
-    # Y是Tensor(n,1) n行1列，每一行的y值是输出的概率值，而不是实数标签 如果用实数标签，算出来的梯度就不准
     h = perturbation_size
     n = len(x)
     e = np.empty(n)

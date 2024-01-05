@@ -1,5 +1,5 @@
 """
-This python file reproduces ADF, the state-of-the-art individual discrimination generation algorithm.
+This python file reproduces ADF.
 The official implementation can be accessed at https://github.com/pxzhang94/ADF.
 """
 
